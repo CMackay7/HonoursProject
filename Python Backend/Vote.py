@@ -8,7 +8,6 @@ class Vote:
         for candidate in self.candidates:
             print(candidate.CandidateName)
 
-
     def print_winner(self):
         winnerpercentage = 0
         for candidate in self.candidates:
