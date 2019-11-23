@@ -24,7 +24,7 @@ class Candidate:
         for key in self.CandidateSimilarity:
             percentage_gained = (similarity_percentage * self.CandidateSimilarity[key]) / 100.0
             votes_gained = votes * percentage_gained
-            percentHash[key] = int(votes_gained)
+            percentHash[str(key)] = int(votes_gained)
 
         return percentHash
 
