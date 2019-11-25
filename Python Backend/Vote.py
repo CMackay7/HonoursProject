@@ -32,13 +32,16 @@ class Vote:
         self.voteBreakdown[candidate_added] = total_votes
 
     def remove_candidate(self, candidate_removed):
-        vote_change_profile = candidate_removed.candidate_removed(self.voteBreakdown[candidate_removed])
+        tosend = set(self.candidates).difference(self.backup_candidates)
+        vote_change_profile = candidate_removed.candidate_removed(self.voteBreakdown[candidate_removed], tosend)
+
         for candidate in self.candidates:
             if candidate != candidate_removed:
                 votes_lost = vote_change_profile[candidate.CandidateName]
                 self.voteBreakdown[candidate] += votes_lost
 
         del self.voteBreakdown[candidate_removed]
+        self.backup_candidates.add(candidate_removed)
 
     def find_candidate(self, candidatename):
         for candidate in self.candidates:
