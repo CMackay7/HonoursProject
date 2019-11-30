@@ -4,6 +4,7 @@ class Vote:
             self.candidates = candidates
             self.voteBreakdown = voteBreakdown
             self.backup_candidates = backup_candidates
+            self.candidateToWin = candidates[0]
 
     def print_candidates(self):
         for candidate in self.candidates:
@@ -30,6 +31,7 @@ class Vote:
             self.voteBreakdown[candidate] -= votes_lost
 
         self.voteBreakdown[candidate_added] = total_votes
+        self.backup_candidates.remove(candidate_added)
 
     def remove_candidate(self, candidate_removed):
         tosend = set(self.candidates).difference(self.backup_candidates)

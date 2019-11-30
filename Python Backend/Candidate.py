@@ -8,6 +8,7 @@ class Candidate:
         self.CandidateName = CandidateNameIn
         self.CandidateSimilarity = CandidateSimilarityIn
 
+
     # METHODS
     def candidate_added(self, candidate_name, number_of_voters):
         likeness = self.CandidateSimilarity[candidate_name]
