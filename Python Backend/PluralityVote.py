@@ -38,6 +38,15 @@ class PluralityVote:
         print(bestcandidatevotes)
         return bestcandidate
 
+
+    def best_to_remove(self):
+        bestcandidate = ""
+        bestcandidatevotes = 0
+        for backupcand in self.vote.backup_candidates:
+            print("")
+            # TODO: implement this
+            # currentmath = self.similarity_difference()
+
     def similarity_difference(self, backupcandidate):
         total = 0
         for candidate in self.vote.candidates:
