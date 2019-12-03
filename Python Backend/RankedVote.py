@@ -28,6 +28,7 @@ class RankedVote(Vote):
 
         return out
 
+# VOTING METHODS
 
     def instantrunoffmethod(self):
         round = 1
@@ -38,13 +39,6 @@ class RankedVote(Vote):
         while not leave:
 
             breakdown = self.distribute_preferences(valid_candidates)
-
-  #          for key in breakdown:
-  #              if key in votes:
-  #                  #todo maybe don't do this
-  #                  votes[key] += breakdown[key]
-  #              else:
-  #                  votes[key] = breakdown[key]
 
             if self.calc_to_fifty(breakdown):
                     leave = True
@@ -71,6 +65,21 @@ class RankedVote(Vote):
 
         return votes
 
+    def borda_count(self):
+        n = len(self.candidates_copy)
+        vote = {}
+        for ballot in self.voteBreakdown_copy:
+            ranking = ballot.candidateRanking
+            for round in ranking:
+                cand = ranking[round]
+                if cand in vote:
+                    vote[ranking[round]] += (n - (round - 1)) * ballot.percentage
+                else:
+                    vote[ranking[round]] = (n - (round - 1)) * ballot.percentage
+
+        return vote
+
+# END OF VOTING METHODS
 
     def find_lowest(self, breakdown):
         secondhighest = (min(breakdown, key=breakdown.get))
