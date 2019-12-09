@@ -5,3 +5,7 @@ class RankedBallot:
     def __init__(self, percentage, ranking):
         self.percentage = percentage
         self.candidateRanking = ranking
+
+
+
+

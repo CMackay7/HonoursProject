@@ -1,7 +1,7 @@
 from Vote import Vote
+
+
 class RankedVote(Vote):
-
-
 
     def __init__(self, candidates, voteBreakdown, backup_candidates):
         super().__init__(candidates, voteBreakdown, backup_candidates)
@@ -9,7 +9,6 @@ class RankedVote(Vote):
         self.voteBreakdown_copy = voteBreakdown.copy()
         self.backup_candidates_copy = backup_candidates.copy()
         print(self.voteBreakdown)
-
 
     def reset_values(self):
         self.candidates_copy = self.candidates.copy()
@@ -46,8 +45,6 @@ class RankedVote(Vote):
             if leave == False:
                 lowest = self.find_lowest(breakdown)
                 valid_candidates.remove(lowest)
-
-
         return breakdown
 
     def av_plus(self):
@@ -102,16 +99,12 @@ class RankedVote(Vote):
                         break
         return votes
 
-
-
     def find_highest_two(self, breakdown):
         highest = (max(breakdown, key=breakdown.get))
         del breakdown[highest]
         secondhighest = (max(breakdown, key=breakdown.get))
 
         return (highest, secondhighest)
-
-
 
     def calc_to_fifty(self, breakdown):
         votes = {}
@@ -126,6 +119,65 @@ class RankedVote(Vote):
             else:
                 return False
 
-#if __name__ == "__main__":
-#    ranked = RankedVote(["dsfvds"], "sgrfv", "afesfsdv")
+
+    def remove_candidate(self, candidate_remove):
+        shifting = False
+        for ballot in self.voteBreakdown_copy:
+            newballot = {}
+            ranking = ballot.candidateRanking
+            for cand in ranking:
+                if ranking[cand].CandidateName == candidate_remove:
+                    # This is the candidate that has been removed
+
+                    print()
+                else:
+                    # THis is not the candidate that has been removed
+                    print()
+
+    def find_borda_add(self):
+        out = {}
+        for candidate_to_add in self.backup_candidates_copy:
+            add_to = 0
+            for candidate in self.candidates_copy:
+                if not candidate == self.candidateToWin:
+                    to_win_rank = candidate.CandidateSimilarity[self.candidateToWin.CandidateName]
+                    added_rank = candidate.CandidateSimilarity[candidate_to_add.CandidateName]
+
+                    add_to += to_win_rank - added_rank
+                    out[candidate_to_add] = add_to
+
+        maximum = max(out, key=out.get)
+        return maximum, out[maximum]
+
+    def find_best_remove(self):
+        num_of_cands = len(self.candidates_copy)
+        storenewvals = {}
+        for ballot in self.voteBreakdown_copy:
+            # for candidate in self.candidates_copy:
+            ranking = ballot.candidateRanking
+
+            for cand in ranking:
+                mathsvalue = 0
+                if not ranking[cand] == self.candidateToWin:
+                    mathsvalue += (num_of_cands - cand) * ballot.percentage
+
+                    if ranking[cand] in storenewvals:
+                        storenewvals[ranking[cand]] += mathsvalue
+                    else:
+                        storenewvals[ranking[cand]] = mathsvalue
+
+        return storenewvals
+
+    def remove_candidate(self, candidate_to_remove):
+        for ballot in self.voteBreakdown_copy:
+            del ballot.candidateRanking[candidate_to_remove]
+            if len(ballot.candidateRanking) == 0:
+                print("do that shit here boyo")
+            else:
+                self.rejig(ballot.candidateRanking)
+
+    def rejig(self, ranking):
+        print()
+
+
 
