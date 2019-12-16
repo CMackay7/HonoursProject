@@ -1,4 +1,5 @@
 from Vote import Vote
+import copy
 
 
 class RankedVote(Vote):
@@ -165,19 +166,46 @@ class RankedVote(Vote):
                         storenewvals[ranking[cand]] += mathsvalue
                     else:
                         storenewvals[ranking[cand]] = mathsvalue
+        return max(storenewvals, key=storenewvals.get)
 
-        return storenewvals
+    # todo Removed passing the candidate to remove into the function should probably add it back later
 
-    def remove_candidate(self, candidate_to_remove):
-        for ballot in self.voteBreakdown_copy:
-            del ballot.candidateRanking[candidate_to_remove]
-            if len(ballot.candidateRanking) == 0:
-                print("do that shit here boyo")
-            else:
-                self.rejig(ballot.candidateRanking)
+    # This method will remove a candidate from a ranked vote at the moment you do not need to pass it anything when is
+    # is called as it will workout the best candidate to remove wile running
+    def remove_candidate(self):
+        candidate_to_remove = self.find_best_remove()
+        changeable_vote = copy.deepcopy(self.voteBreakdown_copy)
+        for i in range(len(self.voteBreakdown_copy)):
+            deleted = False
+            ballot = self.voteBreakdown_copy[i]
+            for cand in ballot.candidateRanking:
+                if ballot.candidateRanking[cand] == candidate_to_remove:
+                    deleted = True
+                    del changeable_vote[i].candidateRanking[cand]
+
+            if deleted:
+                if len(changeable_vote[i].candidateRanking) <= 1:
+                    print("do that shit here boyo")
+                else:
+                    ranking = self.rejig(changeable_vote[i].candidateRanking)
+                    changeable_vote[i].candidateRanking = ranking
+
+        self.voteBreakdown_copy = changeable_vote
+
 
     def rejig(self, ranking):
-        print()
+        counter = 1
+        newranking = {}
+        for place in ranking:
+            if not place == counter:
+                newranking[counter - 1] = ranking[place]
+            else:
+                newranking[counter] = ranking[place]
+
+            counter += 1
+
+        return newranking
+
 
 
 
