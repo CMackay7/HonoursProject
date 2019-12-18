@@ -38,4 +38,18 @@ class Candidate:
 
         return total
 
+# todo change this so it doesnt return the name but the object
+    def highest(self, valid_candidates):
+        highestval = -10
+
+        for candidate in self.CandidateSimilarity:
+            if self.CandidateSimilarity[candidate] > 0 and self.CandidateSimilarity[candidate] > highestval:
+                highestval = self.CandidateSimilarity[candidate]
+                highestcand = Candidate
+
+        if highestval == -10:
+            print("oops")
+
+        return candidate
+
 

@@ -1,10 +1,11 @@
 class Vote:
 
-    def __init__(self, candidates, voteBreakdown, backup_candidates):
+    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
             self.candidates = candidates
             self.voteBreakdown = voteBreakdown
             self.backup_candidates = backup_candidates
-            self.candidateToWin = candidates[0]
+            self.candidateToWin = valid_candidates[0]
+            self.valid_candidates = valid_candidates
 
     def print_candidates(self):
         for candidate in self.candidates:
@@ -45,6 +46,8 @@ class Vote:
         del self.voteBreakdown[candidate_removed]
         self.backup_candidates.add(candidate_removed)
 
+
+# todo fix candidatecopy not in vote
     def find_candidate(self, candidatename):
         for candidate in self.candidates:
             if candidate.CandidateName == candidatename:
