@@ -1,3 +1,5 @@
+import copy
+
 class Vote:
 
     def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
@@ -6,6 +8,10 @@ class Vote:
             self.backup_candidates = backup_candidates
             self.candidateToWin = valid_candidates[0]
             self.valid_candidates = valid_candidates
+
+            self.voteBreakdown_copy = copy.deepcopy(voteBreakdown)
+            self.backup_candidates_copy = copy.deepcopy(backup_candidates)
+            self.valid_candidates_copy = copy.deepcopy(valid_candidates)
 
     def print_candidates(self):
         for candidate in self.candidates:

@@ -1,23 +1,20 @@
 from Vote import Vote
 import copy
 from collections import defaultdict
+import RankedBallot
 
 
 class RankedVote(Vote):
 
-    # todo this probably needs to be changes to deep copy
+    # Candidates is the only one of these which contains the actual objects do not modify or copy
     def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
         super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates)
-        self.candidates_copy = candidates.copy()
-        self.voteBreakdown_copy = voteBreakdown.copy()
-        self.backup_candidates_copy = backup_candidates.copy()
-        self.valid_candidates_copy = copy.deepcopy(valid_candidates)
-        print(self.voteBreakdown)
 
     def reset_values(self):
-        self.candidates_copy = self.candidates.copy()
+      #  self.candidates_copy = self.candidates.copy()
         self.voteBreakdown_copy = self.voteBreakdown.copy()
         self.backup_candidates_copy = self.backup_candidates.copy()
+        self.valid_candidates_copy =
 
     def round_x(self, round):
         out = defaultdict(int)
@@ -62,10 +59,10 @@ class RankedVote(Vote):
             two_highest = self.find_highest_two(breakdown)
             votes = self.distribute_preferences(two_highest)
         self.reset()
-        return votes
+        return self.find_total_percentage(votes)
 
     def borda_count(self):
-        n = len(self.candidates_copy)
+        n = len(self.candidates)
         vote = defaultdict(int)
         for ballot in self.voteBreakdown_copy:
             ranking = ballot.candidateRanking
@@ -84,11 +81,12 @@ class RankedVote(Vote):
 
     def distribute_preferences(self, valid_candidates):
         votes = defaultdict(int)
+        counter = 1
         for ballot in self.voteBreakdown_copy:
             ranking = ballot.candidateRanking
-            for candidate in ranking:
+            for candidate in range (1, len(ranking) + 1):
                 # todo change to array of candidates
-                if ranking[candidate] in self.valid_candidates_copy:
+                if ranking[candidate] in valid_candidates:
                     votes[ranking[candidate]] += ballot.percentage
                     break
 
@@ -197,7 +195,7 @@ class RankedVote(Vote):
             if deleted:
                 if len(self.voteBreakdown_copy[i].candidateRanking) == 0:
                     highest = self.find_candidate(candidate_to_remove).highest(self.candidates)
-                    self.voteBreakdown_copy[i].candidateRanking[1] = self.find_candidate_copy(highest)
+                    self.voteBreakdown_copy[i].candidateRanking[1] = highest
                     print("do that shit here boyo")
                 else:
                    ranking = self.rejig(self.voteBreakdown_copy[i].candidateRanking)
@@ -221,6 +219,8 @@ class RankedVote(Vote):
 
     def reset(self):
         self.voteBreakdown_copy = copy.deepcopy(self.voteBreakdown)
+        self.valid_candidates_copy = copy.deepcopy(self.valid_candidates)
+        self.backup_candidates_copy = copy.deepcopy(self.backup_candidates)
 
 
     def find_candidate_copy(self, candidatename):
@@ -229,4 +229,47 @@ class RankedVote(Vote):
                 return candidate
 
 
+    def add_candidate(self):
+        candidate_to_add = self.backup_candidates_copy[0]
+        return_ballot = []
+        for vote in self.voteBreakdown_copy:
+            first_candidate_similarity = self.find_candidate(vote.candidateRanking[1]).CandidateSimilarity
+            added_candidate_similarity = first_candidate_similarity[candidate_to_add]
+            if added_candidate_similarity > 0:
+                candidate_order = self.move_rank_order(vote.candidateRanking)
+                candidate_order[1] = candidate_to_add
 
+                numbers_to_add = (vote.percentage * (added_candidate_similarity / 10))
+
+                vote_to_add = RankedBallot.RankedBallot(numbers_to_add, candidate_order)
+                updated_vote = RankedBallot.RankedBallot(vote.percentage - numbers_to_add, vote.candidateRanking)
+                return_ballot.append(vote_to_add)
+                return_ballot.append(updated_vote)
+            else:
+                return_ballot.append(vote)
+
+        self.voteBreakdown_copy = return_ballot
+
+
+
+    def move_rank_order(self, candidate_order):
+        vote = {}
+
+        for rank in candidate_order:
+            vote[rank + 1] = candidate_order[rank]
+
+        return vote
+
+
+    def find_total_percentage(self, results):
+        total_votes = 0
+        converted_votes = {}
+        for candidate in results:
+            total_votes += results[candidate]
+
+        for candidate in results:
+            percentage_won = (results[candidate] / total_votes) * 100
+            added_votes = round(percentage_won, 0)
+            converted_votes[candidate] = added_votes
+
+        return converted_votes
