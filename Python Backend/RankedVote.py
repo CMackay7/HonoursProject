@@ -14,7 +14,7 @@ class RankedVote(Vote):
       #  self.candidates_copy = self.candidates.copy()
         self.voteBreakdown_copy = self.voteBreakdown.copy()
         self.backup_candidates_copy = self.backup_candidates.copy()
-        self.valid_candidates_copy =
+        #self.valid_candidates_copy =
 
     def round_x(self, round):
         out = defaultdict(int)
