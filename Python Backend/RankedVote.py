@@ -10,31 +10,24 @@ class RankedVote(Vote):
     def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
         super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates)
 
-    def reset_values(self):
-      #  self.candidates_copy = self.candidates.copy()
-        self.voteBreakdown_copy = self.voteBreakdown.copy()
-        self.backup_candidates_copy = self.backup_candidates.copy()
-        #self.valid_candidates_copy =
-
+    # Return the number of votes each candidate got in the specified round
     def round_x(self, round):
         out = defaultdict(int)
         for vote in self.voteBreakdown_copy:
             if len(vote.candidateRanking) >= round:
-                #cand = vote.candidateRanking[round]
                 out[vote.candidateRanking[round]] += vote.percentage
         return out
 
 # VOTING METHODS
 
+    # The instant run off method will remove the lowest candidate and distribute their preferences until someone has 50%
+    # This process is done one at a time
     def instantrunoffmethod(self):
-        round = 1
-        votes = {}
         leave = False
-        #valid_candidates = self.candidates_copy
-        #votes = self.distribute_preferences(self.candidates_copy[1])
-        while not leave:
 
+        while not leave:
             breakdown = self.distribute_preferences(self.valid_candidates_copy)
+            breakdown = self.find_total_percentage(breakdown)
 
             if self.calc_to_fifty(breakdown):
                     leave = True
@@ -44,8 +37,11 @@ class RankedVote(Vote):
                 self.valid_candidates_copy.remove(lowest)
 
         self.valid_candidates_copy = copy.deepcopy(self.valid_candidates)
+        self.reset()
         return breakdown
 
+    # Av_plus is similar to instantrunoff but after the first round is calculated every candidate bar the top two is
+    # removed and their preferences are distributed
     def av_plus(self):
         round = 1
         votes = {}
@@ -54,13 +50,14 @@ class RankedVote(Vote):
         breakdown = self.round_x(round)
 
         if self.calc_to_fifty(breakdown):
-            return breakdown
+            return self.find_total_percentage(breakdown)
         else:
             two_highest = self.find_highest_two(breakdown)
             votes = self.distribute_preferences(two_highest)
         self.reset()
         return self.find_total_percentage(votes)
 
+    # Borda count is some maths thing
     def borda_count(self):
         n = len(self.candidates)
         vote = defaultdict(int)
@@ -69,6 +66,7 @@ class RankedVote(Vote):
             for round in ranking:
                 cand = ranking[round]
                 vote[ranking[round]] += (n - (round - 1)) * ballot.percentage
+        self.reset()
         return vote
 
 # END OF VOTING METHODS
@@ -78,14 +76,13 @@ class RankedVote(Vote):
         return secondhighest
 
 # Got through each ballot and look if first round is valid if not look if second round is valid and so on
-
+# When it hits the first valid candidate in the ballot it will give all the votes to that candidate
     def distribute_preferences(self, valid_candidates):
         votes = defaultdict(int)
         counter = 1
         for ballot in self.voteBreakdown_copy:
             ranking = ballot.candidateRanking
-            for candidate in range (1, len(ranking) + 1):
-                # todo change to array of candidates
+            for candidate in range(1, len(ranking) + 1):
                 if ranking[candidate] in valid_candidates:
                     votes[ranking[candidate]] += ballot.percentage
                     break
@@ -94,20 +91,6 @@ class RankedVote(Vote):
             for candidate in valid_candidates:
                 if not candidate in votes:
                     votes[candidate] = 0
-        return votes
-
-
-
-        #todo: havent changed this one i am going to see if i need it an possible remove it
-    def distribute_preferences_ojs(self, valid_candidates):
-        votes = defaultdict(int)
-        for ballot in self.voteBreakdown_copy:
-            ranking = ballot.candidateRanking
-            for candidate in ranking:
-                 # todo change to array of candidates
-                if ranking[candidate].CandidateName in valid_candidates:
-                    votes[ranking[candidate].CandidateName] += ballot.percentage
-                    break
         return votes
 
     def find_highest_two(self, breakdown):
@@ -122,25 +105,12 @@ class RankedVote(Vote):
         for key in breakdown:
             votes[key] += breakdown[key]
         for key in votes:
-            if votes[key] > 50:
+            if votes[key] >= 50:
                 return True
             else:
                 return False
 
 
-    # def remove_candidate(self, candidate_remove):
-    #     shifting = False
-    #     for ballot in self.voteBreakdown_copy:
-    #         newballot = {}
-    #         ranking = ballot.candidateRanking
-    #         for cand in ranking:
-    #             if ranking[cand].CandidateName == candidate_remove:
-    #                 # This is the candidate that has been removed
-    #
-    #                 print()
-    #             else:
-    #                 # THis is not the candidate that has been removed
-    #                 print()
 
     def find_borda_add(self):
         out = {}
