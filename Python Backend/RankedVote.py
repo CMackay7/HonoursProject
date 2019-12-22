@@ -2,6 +2,7 @@ from Vote import Vote
 import copy
 from collections import defaultdict
 import RankedBallot
+from itertools import combinations
 
 
 class RankedVote(Vote):
@@ -193,10 +194,10 @@ class RankedVote(Vote):
         self.backup_candidates_copy = copy.deepcopy(self.backup_candidates)
 
 
-    def find_candidate_copy(self, candidatename):
-        for candidate in self.candidates_copy:
-            if candidate.CandidateName == candidatename:
-                return candidate
+    # def find_candidate_copy(self, candidatename):
+    #     for candidate in self.candida:
+    #         if candidate.CandidateName == candidatename:
+    #             return candidate
 
 
     def add_candidate(self):
@@ -206,7 +207,7 @@ class RankedVote(Vote):
             first_candidate_similarity = self.find_candidate(vote.candidateRanking[1]).CandidateSimilarity
             added_candidate_similarity = first_candidate_similarity[candidate_to_add]
             if added_candidate_similarity > 0:
-                candidate_order = self.move_rank_order(vote.candidateRanking)
+                candidate_order = self.shift_ranks_down(vote.candidateRanking)
                 candidate_order[1] = candidate_to_add
 
                 numbers_to_add = (vote.percentage * (added_candidate_similarity / 10))
@@ -222,7 +223,7 @@ class RankedVote(Vote):
 
 
 
-    def move_rank_order(self, candidate_order):
+    def shift_ranks_down(self, candidate_order):
         vote = {}
 
         for rank in candidate_order:
@@ -231,6 +232,8 @@ class RankedVote(Vote):
         return vote
 
 
+    # The candidates are given a percentage and not a number of votes so when a candidate is deleted the total votes
+    # may not equal to 50 so this takes the results and recalculates the percentage that each candidate gets
     def find_total_percentage(self, results):
         total_votes = 0
         converted_votes = {}
@@ -243,3 +246,50 @@ class RankedVote(Vote):
             converted_votes[candidate] = added_votes
 
         return converted_votes
+
+    # Work out the results of a pairwise comparison between two candidates
+    def pairwise_comparison(self, a, b):
+        out = defaultdict(int)
+        #counter = 1
+        for ballot in self.voteBreakdown_copy:
+            for candidate in range(1, len(ballot.candidateRanking) + 1):
+                cand = ballot.candidateRanking[candidate]
+                if cand == a:
+                    out[a] += ballot.percentage
+                    break
+                if cand == b:
+                    out[b] += ballot.percentage
+                    break
+
+        results = self.find_total_percentage(out)
+
+        return results
+
+    def copeland_method(self):
+        comparisons = defaultdict(int)
+
+        for perm in combinations(self.valid_candidates, 2):
+            result = self.pairwise_comparison(perm[0], perm[1])
+            if not result[perm[0]] == result[perm[1]]:
+                if result[perm[0]] > result[perm[1]]:
+                    comparisons[perm[0]] += 1
+                    comparisons[perm[1]] -= 1
+                else:
+                    comparisons[perm[1]] += 1
+                    comparisons[perm[0]] -= 1
+        return comparisons
+
+    def minmax_method(self):
+        minmax_store = defaultdict(int)
+        for ballot in self.voteBreakdown_copy:
+            for perm in combinations(self.valid_candidates, 2):
+                result = self.pairwise_comparison(perm[0], perm[1])
+
+                # the winner of minmax method is tha candidate that has the best worst showing. so every time there is a pairwise
+                # comparison if the opponenst result is better then their current worst replace it
+                if minmax_store[perm[0]] < result[perm[1]]:
+                    minmax_store[perm[0]] = result[perm[1]]
+                if minmax_store[perm[1]] < result[perm[0]]:
+                    minmax_store[perm[1]] = result[perm[0]]
+
+        return minmax_store
