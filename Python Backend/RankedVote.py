@@ -3,7 +3,7 @@ import copy
 from collections import defaultdict
 import RankedBallot
 from itertools import combinations
-
+import Graph
 
 class RankedVote(Vote):
 
@@ -293,3 +293,23 @@ class RankedVote(Vote):
                     minmax_store[perm[1]] = result[perm[0]]
 
         return minmax_store
+
+
+
+    #todo finish and test this code
+    def ranked_pairs(self):
+        connections = defaultdict(int)
+        for perm in combinations(self.valid_candidates, 2):
+            result = self.pairwise_comparison(perm[0], perm[1])
+            connections[perm] = result[0]
+
+        connect = sorted(connections, key=connections.get)
+
+        g = Graph.Graph([], directed=True)
+        is_cycle = False
+        for vertex in connect:
+            g.add(vertex[0], vertex[0])
+            if g.isCyclic():
+                break
+
+
