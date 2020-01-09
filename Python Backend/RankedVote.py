@@ -301,15 +301,17 @@ class RankedVote(Vote):
         connections = defaultdict(int)
         for perm in combinations(self.valid_candidates, 2):
             result = self.pairwise_comparison(perm[0], perm[1])
-            connections[perm] = result[0]
+            if not result[perm[0]] == result[perm[1]]:
+                connections[(perm[0], perm[1])] = result[perm[0]]
 
         connect = sorted(connections, key=connections.get)
-
+        connect.reverse()
         g = Graph.Graph([], directed=True)
         is_cycle = False
         for vertex in connect:
-            g.add(vertex[0], vertex[0])
+            g.add(vertex[0], vertex[1])
             if g.isCyclic():
                 break
 
+        g.find_source()
 

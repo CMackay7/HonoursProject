@@ -4,10 +4,11 @@ class Candidate:
     CandidateName = ""
     CandidateSimilarity = []
 
-    def __init__(self, CandidateNameIn, CandidateSimilarityIn):
+
+
+    def __init__(self, CandidateNameIn = "", CandidateSimilarityIn = ""):
         self.CandidateName = CandidateNameIn
         self.CandidateSimilarity = CandidateSimilarityIn
-
 
     # METHODS
     def candidate_added(self, candidate_name, number_of_voters):
@@ -37,6 +38,12 @@ class Candidate:
                 total += self.CandidateSimilarity[key.CandidateName]
 
         return total
+
+    def set_name(self, candidatename):
+        self.CandidateName = candidatename
+
+    def set_similarity(self, candidate_similarity):
+        self.CandidateSimilarity = candidate_similarity
 
 # todo change this so it doesnt return the name but the object
     def highest(self, valid_candidates):

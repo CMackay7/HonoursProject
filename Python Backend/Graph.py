@@ -65,6 +65,20 @@ class Graph:
             return False
 
 
+    def find_source(self):
+        source_dict = defaultdict(int)
+        for key in self._graph:
+            source_dict[key] = 0
+        for key in self._graph:
+            for vertex in self._graph[key]:
+                source_dict[vertex] += 1
+
+        return_val = ""
+        for key in source_dict:
+            if source_dict[key] == 0:
+                return_val = key
+
+
 
 
     def __str__(self):
