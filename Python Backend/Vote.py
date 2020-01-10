@@ -2,11 +2,11 @@ import copy
 
 class Vote:
 
-    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
+    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win):
             self.candidates = candidates
             self.voteBreakdown = voteBreakdown
             self.backup_candidates = backup_candidates
-            self.candidateToWin = valid_candidates[0]
+            self.candidateToWin = self.find_candidate(candidate_to_win)
             self.valid_candidates = valid_candidates
 
             self.voteBreakdown_copy = copy.deepcopy(voteBreakdown)

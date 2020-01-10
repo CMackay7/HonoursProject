@@ -1,7 +1,9 @@
-class PluralityVote:
+import Vote
 
-    def __init__(self, vote):
-        self.vote = vote
+class PluralityVote(Vote):
+
+    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
+        super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, valid_candidates[0])
 
     def BestFPTP(self):
     #winner = self.calc_winner(self.vote.voteBreakdown)

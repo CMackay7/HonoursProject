@@ -1,12 +1,11 @@
+from collections import defaultdict
 class Candidate:
 
     # CLASS VARIABLES
     CandidateName = ""
     CandidateSimilarity = []
 
-
-
-    def __init__(self, CandidateNameIn = "", CandidateSimilarityIn = ""):
+    def __init__(self, CandidateNameIn = "", CandidateSimilarityIn = None):
         self.CandidateName = CandidateNameIn
         self.CandidateSimilarity = CandidateSimilarityIn
 
@@ -43,7 +42,20 @@ class Candidate:
         self.CandidateName = candidatename
 
     def set_similarity(self, candidate_similarity):
+        if not isinstance(candidate_similarity.values()[0], int):
+            candidate_similarity = self.interise_set(candidate_similarity)
+
         self.CandidateSimilarity = candidate_similarity
+
+
+    # the data which will be added will come straight from json and so it will be a string which we dont want
+    # this function just changes every entry so it is an int
+    def interise_set(self, set):
+        out_dict = defaultdict(int)
+        for key in set:
+            out_dict[key] = int(set[key])
+
+        return out_dict
 
 # todo change this so it doesnt return the name but the object
     def highest(self, valid_candidates):

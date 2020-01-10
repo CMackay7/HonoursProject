@@ -9,7 +9,7 @@ class RankedVote(Vote):
 
     # Candidates is the only one of these which contains the actual objects do not modify or copy
     def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
-        super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates)
+        super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, valid_candidates[0])
 
     # Return the number of votes each candidate got in the specified round
     def round_x(self, round):
