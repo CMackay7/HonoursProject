@@ -1,4 +1,4 @@
-import Vote
+from Vote import Vote
 
 class PluralityVote(Vote):
 
