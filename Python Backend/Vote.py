@@ -6,7 +6,7 @@ class Vote:
             self.candidates = candidates
             self.voteBreakdown = voteBreakdown
             self.backup_candidates = backup_candidates
-            self.candidateToWin = self.find_candidate(candidate_to_win)
+            self.candidateToWin = candidate_to_win
             self.valid_candidates = valid_candidates
 
             self.voteBreakdown_copy = copy.deepcopy(voteBreakdown)
@@ -32,13 +32,15 @@ class Vote:
 
     def add_candidate(self, candidate_added):
         total_votes = 0
-        for candidate in self.voteBreakdown:
-            votes_lost = candidate.candidate_added(candidate_added.CandidateName, self.voteBreakdown[candidate])
+        candidate_obj = self.find_candidate(candidate_added)
+        for candidate in self.valid_candidates_copy:
+            curr_candidate_obj = self.find_candidate(candidate)
+            votes_lost = curr_candidate_obj.candidate_added(candidate_added, self.voteBreakdown[candidate])
             total_votes += votes_lost
-            self.voteBreakdown[candidate] -= votes_lost
+            self.voteBreakdown_copy[candidate] -= votes_lost
 
-        self.voteBreakdown[candidate_added] = total_votes
-        self.backup_candidates.remove(candidate_added)
+        self.voteBreakdown_copy[candidate_added] = total_votes
+        self.backup_candidates_copy.remove(candidate_added)
 
     def remove_candidate(self, candidate_removed):
         tosend = set(self.candidates).difference(self.backup_candidates)

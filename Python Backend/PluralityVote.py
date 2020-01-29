@@ -9,30 +9,33 @@ class PluralityVote(Vote):
     #winner = self.calc_winner(self.vote.voteBreakdown)
 
         while True:
-            winner = self.calc_winner(self.vote.voteBreakdown)
-            if winner == self.vote.candidateToWin:
-                return self.vote.voteBreakdown
+            winner = self.calc_winner()
+            if winner == self.candidateToWin:
+                return self.voteBreakdown_copy
             else:
-                if len(self.vote.backup_candidates) > 0:
-                    self.vote.add_candidate(self.best_to_add())
+                if len(self.backup_candidates_copy) > 0:
+                    if not self.best_to_add() == "":
+                        self.add_candidate(self.best_to_add())
+                    else:
+                        return self.voteBreakdown_copy
                 else:
-                    return self.vote.voteBreakdown
+                    return self.voteBreakdown_copy
 
-    def calc_winner(self, votebreakdown):
+    def calc_winner(self):
         winner = ""
         winning_votes = 0
 
-        for candidate in votebreakdown:
-            if votebreakdown[candidate] > winning_votes:
+        for candidate in self.valid_candidates_copy:
+            if self.voteBreakdown_copy[candidate] > winning_votes:
                 winner = candidate
-                winning_votes = votebreakdown[candidate]
+                winning_votes = self.voteBreakdown_copy[candidate]
 
         return winner
 
     def best_to_add(self):
         bestcandidate = ""
         bestcandidatevotes = 0
-        for backup_cand in self.vote.backup_candidates:
+        for backup_cand in self.backup_candidates_copy:
             currentmath = self.similarity_difference(backup_cand)
             if currentmath > bestcandidatevotes:
                 bestcandidatevotes = currentmath
@@ -44,15 +47,22 @@ class PluralityVote(Vote):
     def best_to_remove(self):
         bestcandidate = ""
         bestcandidatevotes = 0
-        for backupcand in self.vote.backup_candidates:
+        for backupcand in self.backup_candidates_copy:
             print("")
             # TODO: implement this
             # currentmath = self.similarity_difference()
 
+    # workout if it is worth addind a candidate
+    # find the similarity from a candidate and the candidate to be added
+    # minus the cost of the candidate you want to win to the candidate you are adding
+    # if this is posative then it is worth adding the candidate
     def similarity_difference(self, backupcandidate):
         total = 0
-        for candidate in self.vote.candidates:
-            if candidate != self.vote.candidateToWin:
-                total += candidate.CandidateSimilarity[backupcandidate.CandidateName] * self.vote.voteBreakdown[candidate]
+        for candidate in self.valid_candidates_copy:
+            if candidate != self.candidateToWin:
+                candidate_obj = self.find_candidate(candidate)
+                total += candidate_obj.CandidateSimilarity[backupcandidate] * self.voteBreakdown[candidate]
 
-        return total - self.vote.candidateToWin.CandidateSimilarity[backupcandidate.CandidateName] * self.vote.voteBreakdown[self.vote.candidateToWin]
+        candidate_to_win = self.find_candidate(self.candidateToWin)
+
+        return total - candidate_to_win.CandidateSimilarity[backupcandidate] * self.voteBreakdown[self.candidateToWin]
