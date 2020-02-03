@@ -78,6 +78,8 @@ class Graph:
             if source_dict[key] == 0:
                 return_val = key
 
+        return return_val
+
 
 
 

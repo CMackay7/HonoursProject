@@ -6,7 +6,6 @@ from itertools import combinations
 import Graph
 
 class RankedVote(Vote):
-
     # Candidates is the only one of these which contains the actual objects do not modify or copy
     def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
         super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, valid_candidates[0])
@@ -25,7 +24,7 @@ class RankedVote(Vote):
     # This process is done one at a time
     def instantrunoffmethod(self):
         leave = False
-
+        #self.candidateToWin
         while not leave:
             breakdown = self.distribute_preferences(self.valid_candidates_copy)
             breakdown = self.find_total_percentage(breakdown)
@@ -110,8 +109,6 @@ class RankedVote(Vote):
                 return True
             else:
                 return False
-
-
 
     def find_borda_add(self):
         out = {}
@@ -200,8 +197,8 @@ class RankedVote(Vote):
     #             return candidate
 
 
-    def add_candidate(self):
-        candidate_to_add = self.backup_candidates_copy[0]
+    def add_candidate(self, candidate_to_add):
+       # candidate_to_add = self.backup_candidates_copy[0]
         return_ballot = []
         for vote in self.voteBreakdown_copy:
             first_candidate_similarity = self.find_candidate(vote.candidateRanking[1]).CandidateSimilarity
@@ -313,5 +310,5 @@ class RankedVote(Vote):
             if g.isCyclic():
                 break
 
-        g.find_source()
+        return g.find_source()
 
