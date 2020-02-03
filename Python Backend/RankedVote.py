@@ -101,14 +101,14 @@ class RankedVote(Vote):
         return (highest, secondhighest)
 
     def calc_to_fifty(self, breakdown):
+        breakdown = self.find_total_percentage(breakdown)
         votes = defaultdict(int)
         for key in breakdown:
             votes[key] += breakdown[key]
         for key in votes:
             if votes[key] >= 50:
                 return True
-            else:
-                return False
+        return False
 
     def find_borda_add(self):
         out = {}
@@ -200,31 +200,54 @@ class RankedVote(Vote):
     def add_candidate(self, candidate_to_add):
        # candidate_to_add = self.backup_candidates_copy[0]
         return_ballot = []
+
         for vote in self.voteBreakdown_copy:
+            votes_lost = 0
             first_candidate_similarity = self.find_candidate(vote.candidateRanking[1]).CandidateSimilarity
             added_candidate_similarity = first_candidate_similarity[candidate_to_add]
             if added_candidate_similarity > 0:
-                candidate_order = self.shift_ranks_down(vote.candidateRanking)
+                candidate_order = self.shift_ranks_down(vote.candidateRanking, 1)
                 candidate_order[1] = candidate_to_add
 
                 numbers_to_add = (vote.percentage * (added_candidate_similarity / 10))
-
+                votes_lost = numbers_to_add
                 vote_to_add = RankedBallot.RankedBallot(numbers_to_add, candidate_order)
-                updated_vote = RankedBallot.RankedBallot(vote.percentage - numbers_to_add, vote.candidateRanking)
+                #updated_vote = RankedBallot.RankedBallot(vote.percentage - numbers_to_add, vote.candidateRanking)
                 return_ballot.append(vote_to_add)
-                return_ballot.append(updated_vote)
-            else:
-                return_ballot.append(vote)
+                #return_ballot.append(updated_vote)
+            counter = 1
+            added = False
+            for candidate in vote.candidateRanking:
+
+                if vote.candidateRanking[candidate] in first_candidate_similarity:
+                    if first_candidate_similarity[candidate_to_add] > first_candidate_similarity[vote.candidateRanking[candidate]]:
+                        candidate_order = self.shift_ranks_down(vote.candidateRanking, counter)
+                        candidate_order[counter] = candidate_to_add
+                        numbers_to_add = (vote.percentage - votes_lost)# * (first_candidate_similarity / 10))
+                        vote_to_add = RankedBallot.RankedBallot(numbers_to_add, candidate_order)
+                        return_ballot.append(vote_to_add)
+                        added = True
+                        break
+
+                counter += 1
+
+            if added == False:
+                return_ballot.append(RankedBallot.RankedBallot(vote.percentage - votes_lost, vote.candidateRanking))
+            added = False
+            counter = 1
 
         self.voteBreakdown_copy = return_ballot
 
 
 
-    def shift_ranks_down(self, candidate_order):
+    def shift_ranks_down(self, candidate_order, pos_start):
         vote = {}
 
         for rank in candidate_order:
-            vote[rank + 1] = candidate_order[rank]
+            if rank >= pos_start:
+                vote[rank + 1] = candidate_order[rank]
+            else:
+                vote[rank] = candidate_order[rank]
 
         return vote
 
