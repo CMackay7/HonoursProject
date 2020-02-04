@@ -54,12 +54,12 @@ class ScoreVote(Vote):
                     return_dict[first_candidate] += ballot.percentage
                 else:
                     return_dict[second_candidate] += ballot.percentage
-            elif first_candidate in ballot:
+            elif first_candidate in ballot.candidateScores:
                 return_dict[first_candidate] += ballot.percentage
-            elif second_candidate in ballot:
+            elif second_candidate in ballot.candidateScores:
                 return_dict[second_candidate] += ballot.percentage
 
-            return self.find_total_percentage(return_dict)
+        return self.find_total_percentage(return_dict)
 
     def find_total_percentage(self, results):
         total_votes = 0
