@@ -1,5 +1,6 @@
 import json
 import RankedBallot
+from ScoreBallot import ScoreBallot
 from collections import defaultdict
 
 
@@ -30,4 +31,21 @@ def get_ballots_ranked(ballot_data):
 
         ranked_ballot = RankedBallot.RankedBallot(votes, ballot)
         vote_breakdown.append(ranked_ballot)
+    return vote_breakdown
+
+
+def get_ballots_score(ballot_data):
+    vote_breakdown = []
+
+    for vote in ballot_data:
+        votes = int(ballot_data[vote])
+
+        ballot = defaultdict(int)
+        candidates_in_vote = vote.split("//")
+        for candidate in candidates_in_vote:
+            candidate_data = candidate.split(":")
+            ballot[candidate_data[0]] = int(candidate_data[1])
+
+        score_ballot = ScoreBallot(votes, ballot)
+        vote_breakdown.append(score_ballot)
     return vote_breakdown
