@@ -236,6 +236,8 @@ class RankedVote(Vote):
             added = False
             counter = 1
 
+        self.valid_candidates_copy.append(candidate_to_add)
+        self.backup_candidates_copy.remove(candidate_to_add)
         self.voteBreakdown_copy = return_ballot
 
 
@@ -313,6 +315,27 @@ class RankedVote(Vote):
                     minmax_store[perm[1]] = result[perm[0]]
 
         return minmax_store
+
+    def find_best_add(self, votes = None):
+        backup_dict = defaultdict(int)
+        candidate_to_win = self.find_candidate(self.candidateToWin)
+        for backup_candidate in self.backup_candidates_copy:
+            #backup_candidate_similarity = self.find_candidate(backup_candidate).candidateSimilarity
+            candidate_towin_added = candidate_to_win.CandidateSimilarity[backup_candidate]
+            if candidate_towin_added == 0:
+                for candidate in self.valid_candidates:
+                    if not candidate == self.candidateToWin:
+                        candidate_similarity = self.find_candidate(candidate).CandidateSimilarity
+
+                        if candidate_towin_added > candidate_similarity[backup_candidate]:
+                            backup_dict[backup_candidate] -= 1
+                        else:
+                            backup_dict[backup_candidate] += 1
+        return max(backup_dict, key=backup_dict.get)
+
+
+
+
 
 
 
