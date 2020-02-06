@@ -42,7 +42,7 @@ class Candidate:
         self.CandidateName = candidatename
 
     def set_similarity(self, candidate_similarity):
-        if not isinstance(candidate_similarity.values()[0], int):
+        if not isinstance(list(candidate_similarity.values())[0], int):
             candidate_similarity = self.interise_set(candidate_similarity)
 
         self.CandidateSimilarity = candidate_similarity

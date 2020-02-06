@@ -40,7 +40,6 @@ class PluralityVote(Vote):
             if currentmath > bestcandidatevotes:
                 bestcandidatevotes = currentmath
                 bestcandidate = backup_cand
-        print(bestcandidatevotes)
         return bestcandidate
 
 
