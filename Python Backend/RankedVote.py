@@ -272,7 +272,7 @@ class RankedVote(Vote):
 
     # Work out the results of a pairwise comparison between two candidates
     def pairwise_comparison(self, a, b):
-        out = defaultdict(int)
+        out = {a:0.0, b:0.0}
         #counter = 1
         for ballot in self.voteBreakdown_copy:
             for candidate in range(1, len(ballot.candidateRanking) + 1):
@@ -340,7 +340,7 @@ class RankedVote(Vote):
     # todo finish and test this code
     def ranked_pairs(self):
         connections = defaultdict(int)
-        for perm in combinations(self.valid_candidates, 2):
+        for perm in combinations(self.valid_candidates_copy, 2):
             result = self.pairwise_comparison(perm[0], perm[1])
             if not result[perm[0]] == result[perm[1]]:
                 connections[(perm[0], perm[1])] = result[perm[0]]
