@@ -334,13 +334,10 @@ class RankedVote(Vote):
                             backup_dict[backup_candidate] += 1
         return max(backup_dict, key=backup_dict.get)
 
+    def delete_backup(self, candidate):
+        self.backup_candidates_copy.remove(candidate)
 
-
-
-
-
-
-    #todo finish and test this code
+    # todo finish and test this code
     def ranked_pairs(self):
         connections = defaultdict(int)
         for perm in combinations(self.valid_candidates, 2):
