@@ -25,8 +25,9 @@ class RankedVote(Vote):
     def instantrunoffmethod(self):
         leave = False
         #self.candidateToWin
+        candidates = self.valid_candidates_copy
         while not leave:
-            breakdown = self.distribute_preferences(self.valid_candidates_copy)
+            breakdown = self.distribute_preferences(candidates)
             breakdown = self.find_total_percentage(breakdown)
 
             if self.calc_to_fifty(breakdown):
@@ -36,8 +37,8 @@ class RankedVote(Vote):
                 lowest = self.find_lowest(breakdown)
                 self.valid_candidates_copy.remove(lowest)
 
-        self.valid_candidates_copy = copy.deepcopy(self.valid_candidates)
-        self.reset()
+        #self.valid_candidates_copy = copy.deepcopy(self.valid_candidates)
+        #self.reset()
         return breakdown
 
     # Av_plus is similar to instantrunoff but after the first round is calculated every candidate bar the top two is
@@ -54,7 +55,7 @@ class RankedVote(Vote):
         else:
             two_highest = self.find_highest_two(breakdown)
             votes = self.distribute_preferences(two_highest)
-        self.reset()
+        #self.reset()
         return self.find_total_percentage(votes)
 
     # Borda count is some maths thing
@@ -66,7 +67,7 @@ class RankedVote(Vote):
             for round in ranking:
                 cand = ranking[round]
                 vote[ranking[round]] += (n - (round - 1)) * ballot.percentage
-        self.reset()
+        #self.reset()
         return vote
 
 # END OF VOTING METHODS
@@ -125,7 +126,7 @@ class RankedVote(Vote):
                     out[candidate_to_add] = add_to
 
         maximum = max(out, key=out.get)
-        return maximum, out[maximum]
+        return maximum
 
     def find_best_remove(self):
         num_of_cands = len(self.valid_candidates_copy)

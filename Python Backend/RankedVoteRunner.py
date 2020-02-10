@@ -19,9 +19,20 @@ class RankedVoteRunner:
             rankedpairs = self.run_rankedpairs()
         else:
             runoff = self.run_instantrunnoff_true()
+            self.ranked_vote.reset()
+            if runoff[0] == candidate_to_win:
+                return_dict.update(runoff[1])
 
-        if runoff[0] == candidate_to_win:
-            return_dict.update(runoff[1])
+            avplus = self.run_avplus_true()
+            self.ranked_vote.reset()
+            if avplus[0] == candidate_to_win:
+                return_dict.update(avplus[1])
+
+            borda = self.run_boardacount_true()
+            self.ranked_vote.reset()
+            if borda[0] == candidate_to_win:
+                return_dict.update(borda[1])
+
 
         # if av_plus[0] == candidate_to_win:
         #     return_dict.update(av_plus[1])
@@ -58,7 +69,7 @@ class RankedVoteRunner:
             return winner, json
         else:
             for loop in range(loop_len):
-                add = "eddie"
+                add = self.ranked_vote.find_best_add()
                 self.ranked_vote.add_candidate(add)
                 updates[add] = "added"
                 breakdown = self.ranked_vote.instantrunoffmethod()
@@ -68,9 +79,6 @@ class RankedVoteRunner:
                     return winner, json
         return winner, json
 
-
-
-
     def run_avplus(self):
         updates = {"nil": "nil"}
         json = {"AVP": updates}
@@ -79,11 +87,51 @@ class RankedVoteRunner:
 
         return winner, json
 
+    def run_avplus_true(self):
+        updates = {}
+        json = {"AVP": {}}
+        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        breakdown = self.ranked_vote.av_plus()
+        winner = max(breakdown, key=breakdown.get)
+        if winner == self.ranked_vote.candidateToWin:
+            return winner, json
+        else:
+            for loop in range(loop_len):
+                add = self.ranked_vote.find_best_add()
+                self.ranked_vote.add_candidate(add)
+                updates[add] = "added"
+                breakdown = self.ranked_vote.av_plus()
+                winner = max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["IRN"] = updates
+                    return winner, json
+        return winner, json
+
     def run_bordacount(self):
         json = {"election": "BC"}
         breakdown = self.ranked_vote.borda_count()
         winner = max(breakdown, key=breakdown.get)
 
+        return winner, json
+
+    def run_boardacount_true(self):
+        updates = {}
+        json = {"BC": {}}
+        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        breakdown = self.ranked_vote.borda_count()
+        winner = max(breakdown, key=breakdown.get)
+        if winner == self.ranked_vote.candidateToWin:
+            return winner, json
+        else:
+            for loop in range(loop_len):
+                add = self.ranked_vote.find_borda_add()
+                self.ranked_vote.add_candidate(add)
+                updates[add] = "added"
+                breakdown = self.ranked_vote.borda_count()
+                winner = max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["IRN"] = updates
+                    return winner, json
         return winner, json
 
     def run_copeland(self):
