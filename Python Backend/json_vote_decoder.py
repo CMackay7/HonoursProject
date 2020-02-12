@@ -2,6 +2,7 @@ import json
 import RankedBallot
 from ScoreBallot import ScoreBallot
 from collections import defaultdict
+from Candidate import Candidate
 
 
 def get_ballots_plurality(ballot_data):
@@ -49,3 +50,43 @@ def get_ballots_score(ballot_data):
         score_ballot = ScoreBallot(votes, ballot)
         vote_breakdown.append(score_ballot)
     return vote_breakdown
+
+
+# gets the candidate data from the json
+def populate_candidate(candidates_in):
+    candidates = []
+    #loop through the candidates in json and add all the data
+    for candidate in candidates_in:
+        candidate_name = candidate["name"]
+        candidate_similarities = candidate["similarity"]
+        # All that is needed to decalre a new candidate is the name of the candidate and their similarity
+        # in the dictionary form
+        candidate_to_add = Candidate(candidate_name)
+        candidate_to_add.set_similarity(candidate_similarities)
+        candidates.append(candidate_to_add)
+
+    return candidates
+
+
+    # create the list of valid candidates
+def calculate_valids(valid_candidate_json, candidates):
+    valid_candidates = []
+    for key in valid_candidate_json:
+        valid_candidates.append(key)
+
+    # Also need to find the candidates that are not valid
+    not_valid_candidates = []
+    for candidate in candidates:
+        # if the candidate is not in the valid list then add it to the not valid list
+        if candidate.CandidateName not in valid_candidates:
+            not_valid_candidates.append(candidate.CandidateName)
+
+    # Return both VALID CANDIDATES ARE FIRST
+    return valid_candidates, not_valid_candidates
+
+
+def get_ballots(ballot_data):
+    vote_breakdown = defaultdict(int)
+
+    for vote in ballot_data:
+        vote_breakdown += int(vote[ballot_data])
