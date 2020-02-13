@@ -15,14 +15,14 @@ app = Flask(__name__)
 @app.route('/plurality', methods=['POST'])
 def handle_plurality():
     json_data = request.get_json()
-
+    candidate_to_win = json_data["candidateToWin"]
     candidate_json = json_data["candidates"]
     valid_candidates = json_data["valid_candidates"]
     candidates = json_vote_decoder.populate_candidate(candidate_json)
     valid_cands, not_valid_cands = json_vote_decoder.calculate_valids(valid_candidates, candidates)
 
     vote_breakdown = json_vote_decoder.get_ballots_plurality(json_data["ballots"])
-    vote = PluralityVote(candidates, vote_breakdown, not_valid_cands, valid_cands)
+    vote = PluralityVote(candidates, vote_breakdown, not_valid_cands, valid_cands, candidate_to_win)
 
     voterunner = PluralityVoteRunner(vote, True)
     jsonreturn = voterunner.run_election()
@@ -36,10 +36,11 @@ def handle_ranked():
     candidate_json = json_data["candidates"]
     valid_candidates = json_data["valid_candidates"]
     candidates = json_vote_decoder.populate_candidate(candidate_json)
+    candidate_to_win = json_data["candidateToWin"]
     valid_cands, not_valid_cands = json_vote_decoder.calculate_valids(valid_candidates, candidates)
 
     vote_breakdown = json_vote_decoder.get_ballots_ranked(json_data["ballots"])
-    vote = RankedVote(candidates, vote_breakdown, not_valid_cands, valid_cands)
+    vote = RankedVote(candidates, vote_breakdown, not_valid_cands, valid_cands, candidate_to_win)
 
     voterunner = RankedVoteRunner(vote, True)
     jsonreturn = voterunner.run_election()
@@ -54,9 +55,10 @@ def handle_score():
     valid_candidates = json_data["valid_candidates"]
     candidates = json_vote_decoder.populate_candidate(candidate_json)
     valid_cands, not_valid_cands = json_vote_decoder.calculate_valids(valid_candidates, candidates)
+    candidate_to_win = json_data["candidateToWin"]
 
     vote_breakdown = json_vote_decoder.get_ballots_score(json_data["ballots"])
-    vote = ScoreVote(candidates, vote_breakdown, not_valid_cands, valid_cands)
+    vote = ScoreVote(candidates, vote_breakdown, not_valid_cands, valid_cands, candidate_to_win)
 
     voterunner = ScoreVoteRunner(vote, True)
     jsonreturn = voterunner.run_election()

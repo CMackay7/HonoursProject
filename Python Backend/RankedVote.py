@@ -7,8 +7,8 @@ import Graph
 
 class RankedVote(Vote):
     # Candidates is the only one of these which contains the actual objects do not modify or copy
-    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
-        super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, valid_candidates[0])
+    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win):
+        super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win)
 
     # Return the number of votes each candidate got in the specified round
     def round_x(self, round):
@@ -332,7 +332,10 @@ class RankedVote(Vote):
                             backup_dict[backup_candidate] -= 1
                         else:
                             backup_dict[backup_candidate] += 1
-        return max(backup_dict, key=backup_dict.get)
+        if len(backup_dict) == 0:
+            return ""
+        else:
+            return max(backup_dict, key=backup_dict.get)
 
     def delete_backup(self, candidate):
         self.backup_candidates_copy.remove(candidate)

@@ -15,6 +15,8 @@ class RankedVoteRunner:
 
         for i in range(loop_length):
             add = self.ranked_vote.find_best_add()
+            if add == "":
+                break
             returndict.append(add)
             self.ranked_vote.delete_backup(add)
 
@@ -91,7 +93,7 @@ class RankedVoteRunner:
     def run_instantrunnoff_true(self):
         updates = {}
         json = {"IRN": {}}
-        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        loop_len = len(self.add_order)
         breakdown = self.ranked_vote.instantrunoffmethod()
         winner = max(breakdown, key=breakdown.get)
         if winner == self.ranked_vote.candidateToWin:
@@ -119,7 +121,7 @@ class RankedVoteRunner:
     def run_avplus_true(self):
         updates = {}
         json = {"AVP": {}}
-        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        loop_len = len(self.add_order)
         breakdown = self.ranked_vote.av_plus()
         winner = max(breakdown, key=breakdown.get)
         if winner == self.ranked_vote.candidateToWin:
@@ -146,7 +148,7 @@ class RankedVoteRunner:
     def run_boardacount_true(self):
         updates = {}
         json = {"BC": {}}
-        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        loop_len = len(self.add_order)
         breakdown = self.ranked_vote.borda_count()
         winner = max(breakdown, key=breakdown.get)
         if winner == self.ranked_vote.candidateToWin:
@@ -174,7 +176,7 @@ class RankedVoteRunner:
     def run_copeland_true(self):
         updates = {}
         json = {"CPLN": {}}
-        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        loop_len = len(self.add_order)
         breakdown = self.ranked_vote.copeland_method()
         if len(breakdown) > 0:
             winner = max(breakdown, key=breakdown.get)
@@ -206,7 +208,7 @@ class RankedVoteRunner:
     def run_minmax_true(self):
         updates = {}
         json = {"MNX": {}}
-        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        loop_len = len(self.add_order)
         breakdown = self.ranked_vote.minmax_method()
         winner = min(breakdown, key=breakdown.get)
         if winner == self.ranked_vote.candidateToWin:
@@ -232,7 +234,7 @@ class RankedVoteRunner:
     def run_rankedpairs_true(self):
         updates = {}
         json = {"RP": {}}
-        loop_len = len(self.ranked_vote.backup_candidates_copy)
+        loop_len = len(self.add_order)
         breakdown = self.ranked_vote.ranked_pairs()
         winner = breakdown #max(breakdown, key=breakdown.get)
         if winner == self.ranked_vote.candidateToWin:

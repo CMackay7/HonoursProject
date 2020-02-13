@@ -2,8 +2,8 @@ from Vote import Vote
 
 class PluralityVote(Vote):
 
-    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates):
-        super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, valid_candidates[0])
+    def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win):
+        super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win)
 
     def BestFPTP(self):
     #winner = self.calc_winner(self.vote.voteBreakdown)
