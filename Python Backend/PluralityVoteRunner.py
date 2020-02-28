@@ -29,6 +29,8 @@ class PluralityVoteRunner:
                 loop_len = len(self.plurality_vote.backup_candidates_copy)
                 for i in range(loop_len):
                     add = self.plurality_vote.best_to_add()
+                    if add == "":
+                        break
                     self.plurality_vote.add_candidate(add)
                     # store the fact that you have added the candidate
                     updates[add] = "added"
