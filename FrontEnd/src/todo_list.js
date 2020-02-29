@@ -83,7 +83,7 @@ class TodoList extends React.Component {
       return (
         <ul>
           {this.props.items.map(item => (
-            <li key={item.id} onClick={() => this.props.handleDelete(item)}>{item.text}</li>
+            <li key={item.id} onClick={() => alert(this.key)}>{item.text}</li>
           ))}
         </ul>
       );

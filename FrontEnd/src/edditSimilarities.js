@@ -30,7 +30,7 @@ class EdditSimilarities extends React.Component {
                 </AccordionItem>)
     }
 
-    onclickevent(id){
+    onclickevent(e, id){
         alert(id);
     }
 
@@ -47,14 +47,15 @@ class EdditSimilarities extends React.Component {
                 
                 var keytoadd = (candidatefrom+"/"+innercand)
                 ///;
-                outlist = outlist.concat(<li key={keytoadd} id={keytoadd} onClick={() => this.onclickevent(this.id)}>{candidatefrom} => {innercand}: {next_loop[innercand]} </li>);
+                outlist = outlist.concat(<li key={keytoadd} id={keytoadd} value="bob" >{candidatefrom} => {innercand}: {next_loop[innercand]} 
+                <button value = {keytoadd} onClick={e => alert(e.target.value)}>asdasd</button> </li>);
                // console.log(outlist);
             }
 
             //c
             //console.log(setlist);
             candidates = candidates.concat(candidatefrom);
-            setlist = setlist.concat(<PannelObjClass key={candidatefrom} candidate={candidatefrom} pannels={outlist}/>);
+            setlist = setlist.concat(<PannelObjClass key={candidatefrom} onclickevent={this.onclickevent} candidate={candidatefrom} pannels={outlist}/>);
             outlist = []
         }
         
