@@ -4,6 +4,7 @@ import MyComp from "./teststuff";
 import TodoList from "./todo_list";
 import BallotEddit from "./ballot_add";
 import BallotList from "./ballot_list";
+import EdditSimilarities from "./edditSimilarities"
 import './App.css';
 
 class App extends React.Component{
@@ -29,6 +30,7 @@ class App extends React.Component{
           <button onClick={() => this.populate_similarities()}> add similarities</button>
           <input type="checkbox" name="vehicle1" id="hidevalues" onClick={()=> this.showDiv()}></input>
           <div id="welcomeDiv"  hidden class="answer_list" > WELCOME</div>
+          <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities}/>
         </div>
 
      
@@ -37,12 +39,12 @@ class App extends React.Component{
 
   showDiv() {
     //document.getElementById('welcomeDiv').style.display = "block";
-    if(document.getElementById("hidevalues").checked === true){
-      document.getElementById("welcomeDiv").style.display = "block";
-      alert("remove");
+    if(document.getElementById("edditsim").checked === true){
+      document.getElementById("edditsim").style.display = "block";
+      //alert("remove");
     } else{
-      document.getElementById("welcomeDiv").style.display = "none";;
-      alert("add");
+      document.getElementById("edditsim").style.display = "none";;
+      //alert("add");
     }
     
     
@@ -55,9 +57,21 @@ class App extends React.Component{
       id: Date.now()
     };
     var something = this.state.items;
-    this.setState(state => ({
-      items: state.items.concat(newItem),
-    }));
+
+    console.log(this.state.items);
+    if(Object.keys(this.state.similarities).length > 0){
+      this.setState({
+        items: this.state.items.concat(newItem)
+    }, () => {
+        this.populate_similarities();
+    });
+
+
+    } else {
+      this.setState(state => ({
+        items: state.items.concat(newItem),
+      }));
+    }
   }
 
   delete_candidate(place){
@@ -125,16 +139,14 @@ class App extends React.Component{
 
   populate_similarities(){
     var dict_to_add = {};
-    //console.log(this.state.items);
     for(var i = 0 ; i < this.state.items.length; i++){
       var currcand = this.state.items[i].text;
-      console.log(currcand);
+      
       var to_add = {};
       for(var x = 0 ; x < this.state.items.length; x++){
         var currcand2 = this.state.items[x].text;
         if (!(currcand === currcand2)){
           to_add[currcand2] = 0;
-          alert(currcand2);
         }
       }
       dict_to_add[currcand] = to_add;
