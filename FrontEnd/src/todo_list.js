@@ -65,14 +65,15 @@ class TodoList extends React.Component {
       //alert("dcs")
       for(var i = 0; i < this.props.items.length ; i++){
         var curr_item = this.props.items[i];
-        if(curr_item.id === item){
+        console.log(curr_item.text + String(i));
+        if(curr_item.text === item){
           return(i)
         }
       }
     }
   
     handleDelete(item) {
-        var place = this.getIndexOf(item.id);
+        var place = this.getIndexOf(item.text);
         this.props.delete_candidate(place)
         
     }
@@ -83,7 +84,7 @@ class TodoList extends React.Component {
       return (
         <ul>
           {this.props.items.map(item => (
-            <li key={item.id} onClick={() => alert(this.key)}>{item.text}</li>
+            <li key={item.id} onClick={() => this.props.handleDelete(item)}>{item.text}</li>
           ))}
         </ul>
       );

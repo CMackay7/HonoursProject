@@ -16,6 +16,8 @@ class App extends React.Component{
     this.delete_candidate = this.delete_candidate.bind(this);
     this.add_ballot = this.add_ballot.bind(this);
     this.populate_similarities = this.populate_similarities.bind(this);
+    this.update_similarities = this.update_similarities.bind(this);
+    this.delete_candidates_fromsim = this.delete_candidates_fromsim.bind(this);
   }
 
   render(){
@@ -30,7 +32,7 @@ class App extends React.Component{
           <button onClick={() => this.populate_similarities()}> add similarities</button>
           <input type="checkbox" name="vehicle1" id="hidevalues" onClick={()=> this.showDiv()}></input>
           <div id="welcomeDiv"  hidden class="answer_list" > WELCOME</div>
-          <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities}/>
+          <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
         </div>
 
      
@@ -76,8 +78,8 @@ class App extends React.Component{
 
   delete_candidate(place){
     //console.log(place);
-    var place = this.find_candidate_in_ballot(this.state.items[place].text);
-
+    //var place = this.find_candidate_in_ballot(this.state.items[place].text);
+    var deletedcandidate = this.state.items[place];
     const newitems = this.state.items;
     newitems.splice(place, 1);
     this.setState(state => ({
@@ -86,6 +88,10 @@ class App extends React.Component{
 
     if(!(place === -1)){
       this.delete_ballot(place);
+    }
+
+    if (Object.keys(this.state.similarities).length > 0) {
+      this.delete_candidates_fromsim(deletedcandidate);
     }
     
   }
@@ -135,6 +141,44 @@ class App extends React.Component{
       }
     }
     return place;
+  }
+
+  // find_candidate_name(place){
+  //   for (var i = 0; i< this.state.items.length; i++){
+
+  //   }
+  // }
+
+  update_similarities(candfrom, candto, value){
+    var simms = this.state.similarities;
+    simms[candfrom][candto] = value;
+    console.log(simms);
+    this.setState(state => ({
+      similarities: simms,
+    }));
+  }
+
+  delete_candidates_fromsim(candidatein){
+    var simms = this.state.similarities;
+    var keys = Object.keys(this.state.similarities);
+    var candidate = candidatein.text;
+
+    console.log("~~~~~~");
+    console.log(candidate);
+    console.log(keys);
+    for(var i = 0; i < keys.length; i++){
+
+      if(!(keys[i] === candidate)){
+        delete simms[keys[i]][candidate];
+      }
+      
+    }
+
+    delete simms[candidate];
+    console.log(simms);
+    this.setState(state => ({
+      similarities: simms,
+    }));
   }
 
   populate_similarities(){

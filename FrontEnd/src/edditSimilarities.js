@@ -1,6 +1,7 @@
 import React from "react";
 import { Accordion, AccordionItem } from 'react-light-accordion';
 import 'react-light-accordion/demo/css/index.css';
+import SimilarPopup from "./similaritiespopup";
 
 class EdditSimilarities extends React.Component {
 
@@ -9,6 +10,7 @@ class EdditSimilarities extends React.Component {
         this.state = {candidateTo: "", thisCandidate: '', similatity: '', candidate: [], listobj: []};
         this.createList = this.createList.bind(this);
         this.onclickevent = this.onclickevent.bind(this);
+        this.handleUpdate = this.handleUpdate.bind(this);
     }
     render(){
         const displayList = this.createList();
@@ -31,7 +33,7 @@ class EdditSimilarities extends React.Component {
     }
 
     onclickevent(e, id){
-        alert(id);
+       // alert(id);
     }
 
     createList(){
@@ -47,11 +49,11 @@ class EdditSimilarities extends React.Component {
                 
                 var keytoadd = (candidatefrom+"/"+innercand)
                 ///;
-                outlist = outlist.concat(<li key={keytoadd} id={keytoadd} value="bob" >{candidatefrom} => {innercand}: {next_loop[innercand]} 
-                <button value = {keytoadd} onClick={e => alert(e.target.value)}>asdasd</button> </li>);
+                outlist = outlist.concat(<li key={keytoadd} update_similarities={this.props.update_similarities} id={keytoadd} value="bob" >{candidatefrom} => {innercand}: {next_loop[innercand]} 
+                <SimilarPopup handleUpdate={this.handleUpdate} value={keytoadd}/> </li>);
                // console.log(outlist);
             }
-
+//<button value = {keytoadd} onClick={e => <SimilarPopup/>}>asdasd</button>
             //c
             //console.log(setlist);
             candidates = candidates.concat(candidatefrom);
@@ -61,6 +63,12 @@ class EdditSimilarities extends React.Component {
         
        
         return setlist;
+    }
+
+    handleUpdate(canddata, value){
+        const candidates = canddata.split('/');
+        //candidates[0],candidates[1], Number(value)
+        this.props.update_similarities(candidates[0],candidates[1], Number(value));
     }
 
 
