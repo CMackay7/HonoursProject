@@ -4,7 +4,9 @@ import MyComp from "./teststuff";
 import TodoList from "./todo_list";
 import BallotEddit from "./ballot_add";
 import BallotList from "./ballot_list";
-import EdditSimilarities from "./edditSimilarities"
+import EdditSimilarities from "./edditSimilarities";
+import BallotEdditRanked from "./ranked_ballot_add";
+import BallotEdditScore from "./score_ballot_add";
 import './App.css';
 
 class App extends React.Component{
@@ -18,6 +20,7 @@ class App extends React.Component{
     this.populate_similarities = this.populate_similarities.bind(this);
     this.update_similarities = this.update_similarities.bind(this);
     this.delete_candidates_fromsim = this.delete_candidates_fromsim.bind(this);
+    this.delete_ballot = this.delete_ballot.bind(this);
   }
 
   render(){
@@ -26,18 +29,18 @@ class App extends React.Component{
         <h3>hello</h3>
         
           <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
-          <BallotEddit candidates={this.state.items} add_ballot = {this.add_ballot}/>
+          <BallotEdditScore candidates={this.state.items} add_ballot = {this.add_ballot}/>
           <h3>Ballots</h3>
-          <BallotList ballots={this.state.ballots}/>
+          <BallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
           <button onClick={() => this.populate_similarities()}> add similarities</button>
-          <input type="checkbox" name="vehicle1" id="hidevalues" onClick={()=> this.showDiv()}></input>
-          <div id="welcomeDiv"  hidden class="answer_list" > WELCOME</div>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
         </div>
 
      
     );
   }
+
+  //          <BallotEddit candidates={this.state.items} add_ballot = {this.add_ballot}/>
 
   showDiv() {
     //document.getElementById('welcomeDiv').style.display = "block";
@@ -80,14 +83,15 @@ class App extends React.Component{
     //console.log(place);
     //var place = this.find_candidate_in_ballot(this.state.items[place].text);
     var deletedcandidate = this.state.items[place];
+    var ballotplace = this.find_candidate_in_ballot(deletedcandidate.text);
     const newitems = this.state.items;
     newitems.splice(place, 1);
     this.setState(state => ({
       items: newitems,
     }));
 
-    if(!(place === -1)){
-      this.delete_ballot(place);
+    if(!(ballotplace === -1)){
+      this.delete_ballot(ballotplace);
     }
 
     if (Object.keys(this.state.similarities).length > 0) {
@@ -163,9 +167,6 @@ class App extends React.Component{
     var keys = Object.keys(this.state.similarities);
     var candidate = candidatein.text;
 
-    console.log("~~~~~~");
-    console.log(candidate);
-    console.log(keys);
     for(var i = 0; i < keys.length; i++){
 
       if(!(keys[i] === candidate)){
