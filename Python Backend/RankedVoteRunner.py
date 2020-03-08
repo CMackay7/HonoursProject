@@ -29,11 +29,23 @@ class RankedVoteRunner:
         candidate_to_win = self.ranked_vote.candidateToWin
         if self.add_remove_allowed is False:
             runoff = self.run_instantrunoff()
+            if runoff == candidate_to_win:
+                return_dict.update({"IRN":""})
             av_plus = self.run_avplus()
+            if av_plus == candidate_to_win:
+                return_dict.update({"AVP": ""})
             borda = self.run_bordacount()
+            if borda == candidate_to_win:
+                return_dict.update({"BC":""})
             copeland = self.run_copeland()
+            if copeland == candidate_to_win:
+                return_dict.update({"CPLN":""})
             minmax = self.run_minmax()
+            if minmax == candidate_to_win:
+                return_dict.update({"MNX":""})
             rankedpairs = self.run_rankedpairs()
+            if rankedpairs == candidate_to_win:
+                return_dict.update({"RP":""})
         else:
             runoff = self.run_instantrunnoff_true()
             self.ranked_vote.reset()
@@ -65,21 +77,6 @@ class RankedVoteRunner:
             if rankedpairs[0] == candidate_to_win:
                 return_dict.update(rankedpairs[1])
 
-        # if av_plus[0] == candidate_to_win:
-        #     return_dict.update(av_plus[1])
-        #
-        # if borda[0] == candidate_to_win:
-        #     return_dict.update(borda[1])
-        #
-        # if copeland[0] == candidate_to_win:
-        #     return_dict.update(copeland[1])
-        #
-        # if minmax[0] == candidate_to_win:
-        #     return_dict.update(minmax[1])
-        #
-        # if rankedpairs[0] == candidate_to_win:
-        #     return_dict.update(rankedpairs[1])
-
         return return_dict
 
 
@@ -87,8 +84,7 @@ class RankedVoteRunner:
         updates = {}
         breakdown = self.ranked_vote.instantrunoffmethod()
         winner = max(breakdown, key=breakdown.get)
-        json = {"IRN": updates}
-        return winner, json
+        return winner
 
     def run_instantrunnoff_true(self):
         updates = {}
@@ -111,12 +107,12 @@ class RankedVoteRunner:
         return winner, json
 
     def run_avplus(self):
-        updates = {"nil": "nil"}
-        json = {"AVP": updates}
+
+
         breakdown = self.ranked_vote.av_plus()
         winner = max(breakdown, key=breakdown.get)
 
-        return winner, json
+        return winner
 
     def run_avplus_true(self):
         updates = {}
@@ -169,6 +165,8 @@ class RankedVoteRunner:
         updates = {"nil": "nil"}
         json = {"CPLN": updates}
         breakdown = self.ranked_vote.copeland_method()
+        if len(breakdown) <= 0:
+            return ""
         winner = max(breakdown, key=breakdown.get)
 
         return winner, json

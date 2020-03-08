@@ -237,7 +237,7 @@ class RankedVote(Vote):
             added = False
             counter = 1
 
-        self.valid_candidates_copy.append(candidate_to_add)
+        self.valid_candidates_copy.add(candidate_to_add)
         self.backup_candidates_copy.remove(candidate_to_add)
         self.voteBreakdown_copy = return_ballot
 
