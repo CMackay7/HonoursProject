@@ -32,14 +32,14 @@ class BallotEdditScore extends React.Component {
                 <h3>{this.state.rank}
                 <select id="candidateSelect" onChange={this.onSelectCandidate}>
                     
-                    <option disabled selected value={1}> -- select an option -- </option>
+                    <option disabled selected value={1}> -- select a candidate -- </option>
                     {select_values.map(item => (
                         <option key={item.id}>{item.text}</option>
                     ))}
                     
                 </select>
                 <select id="rankSelect" onChange={this.onSelectRank}>
-                    <option disabled selected value={0}> -- select an option -- </option>
+                    <option disabled selected value={0}> -- select a score -- </option>
                     <option key={1}>1</option>
                     <option key={2}>2</option>
                     <option key={3}>3</option>
@@ -136,7 +136,15 @@ class BallotEdditScore extends React.Component {
             id: Date.now()
         };
 
-        console.log(finalballot);
+        this.setState(state => ({
+        
+            ballot: [],
+            score:  '',
+            candidates: [],
+            votes: '',
+        }));
+
+        this.props.add_ballot(finalballot);
     }
     
 }

@@ -22,12 +22,14 @@ class BallotList extends React.Component {
 
     deleteBallot(candidatename){
       var place = 0;
-      for(var i = 0; i < this.props.ballots; i++){
-        if(candidatename === this.props.ballots.candidate){
+      for(var i = 0; i < this.props.ballots.length; i++){
+        //console.log("vsfdsvsdv: " + this.props.ballots[i].candidate)
+        if(candidatename === this.props.ballots[i].candidate){
           place = i;
           break;
         }
       }
+      
       this.props.deleteballot(place);
     }
 }

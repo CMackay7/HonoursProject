@@ -113,7 +113,15 @@ class BallotEdditRanked extends React.Component {
             id: Date.now()
         };
 
-        console.log(finalballot);
+        this.setState(state => ({
+            
+            ballot: [],
+            rank:  1,
+            candidates: [],
+            votes: '',
+        }));
+
+        this.props.add_ballot(finalballot);
     }
     
 }
