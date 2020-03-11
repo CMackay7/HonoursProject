@@ -11,13 +11,14 @@ import RankedPage from "./rankedBallotPage";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import Nav from './Nav';
 import CandidateToWin from "./candidate_to_win";
+import PluralityButton from "./send_api_buttin";
 import './App.css';
 
 class NormalPage extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state = {items: [], ballots: [], similarities: {}, candidateToWin:""};
+    this.state = {items: [], ballots: [], similarities: {}, candidateToWin:"", edditable: false};
     this.add_candidate = this.add_candidate.bind(this);
     this.delete_candidate = this.delete_candidate.bind(this);
     this.add_ballot = this.add_ballot.bind(this);
@@ -42,6 +43,8 @@ class NormalPage extends React.Component{
           <BallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
           <button onClick={() => this.populate_similarities()}> add similarities</button>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
+          <PluralityButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable} similarities={this.state.similarities}
+           candidatetowin={this.state.candidateToWin}/>
         </div>
 
      
@@ -205,6 +208,11 @@ class NormalPage extends React.Component{
 
   populate_similarities(){
     var dict_to_add = {};
+    if (this.state.edditable === false){
+      this.setState(state => ({
+        edditable: true,
+      }));
+    }
     for(var i = 0 ; i < this.state.items.length; i++){
       var currcand = this.state.items[i].text;
       
