@@ -21,16 +21,17 @@ def handle_plurality():
 
 
     vote_breakdown = json_vote_decoder.get_ballots_plurality(json_data["ballots"])
-    candidates = json_vote_decoder.populate_candidate(candidate_json)
-    # todo change this
-    valid_cands = vote_breakdown[1]
-    not_valid_cands = json_vote_decoder.calculate_valids(valid_cands, candidates)
-    vote = PluralityVote(candidates, vote_breakdown[0], not_valid_cands, valid_cands, candidate_to_win)
     edditingallowed = json_data["edditing"]
     if(edditingallowed == "T"):
         eddit = True
     else:
         eddit = False
+    candidates = json_vote_decoder.populate_candidate(candidate_json, eddit)
+    # todo change this
+    valid_cands = vote_breakdown[1]
+    not_valid_cands = json_vote_decoder.calculate_valids(valid_cands, candidates)
+    vote = PluralityVote(candidates, vote_breakdown[0], not_valid_cands, valid_cands, candidate_to_win)
+
 
     voterunner = PluralityVoteRunner(vote, eddit)
     jsonreturn = voterunner.run_election()
@@ -44,7 +45,12 @@ def handle_ranked():
 
     candidate_json = json_data["candidates"]
     #valid_candidates = json_data["valid_candidates"]
-    candidates = json_vote_decoder.populate_candidate(candidate_json)
+    edditingallowed = json_data["edditing"]
+    if(edditingallowed == "T"):
+        eddit = True
+    else:
+        eddit = False
+    candidates = json_vote_decoder.populate_candidate(candidate_json, eddit)
     candidate_to_win = json_data["candidateToWin"]
     #valid_cands, not_valid_cands = json_vote_decoder.calculate_valids(valid_candidates, candidates)
 
@@ -52,11 +58,8 @@ def handle_ranked():
     valid_cands = vote_breakdown[1]
     not_valid_cands = json_vote_decoder.calculate_valids(valid_cands, candidates)
     vote = RankedVote(candidates, vote_breakdown[0], not_valid_cands, valid_cands, candidate_to_win)
-    edditingallowed = json_data["edditing"]
-    if(edditingallowed == "T"):
-        eddit = True
-    else:
-        eddit = False
+
+
 
     voterunner = RankedVoteRunner(vote, eddit)
     jsonreturn = voterunner.run_election()
@@ -70,7 +73,7 @@ def handle_score():
 
     candidate_json = json_data["candidates"]
     #valid_candidates = json_data["valid_candidates"]
-    candidates = json_vote_decoder.populate_candidate(candidate_json)
+    candidates = json_vote_decoder.populate_candidate(candidate_json, False)
     #valid_cands,
     candidate_to_win = json_data["candidateToWin"]
 

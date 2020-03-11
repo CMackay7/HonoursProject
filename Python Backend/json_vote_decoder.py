@@ -60,7 +60,7 @@ def get_ballots_score(ballot_data):
 
 
 # gets the candidate data from the json
-def populate_candidate(candidates_in):
+def populate_candidate(candidates_in, edditable):
     candidates = []
     #loop through the candidates in json and add all the data
     for candidate in candidates_in:
@@ -69,7 +69,8 @@ def populate_candidate(candidates_in):
         # All that is needed to decalre a new candidate is the name of the candidate and their similarity
         # in the dictionary form
         candidate_to_add = Candidate(candidate_name)
-        candidate_to_add.set_similarity(candidate_similarities)
+        if edditable is True:
+            candidate_to_add.set_similarity(candidate_similarities)
         candidates.append(candidate_to_add)
 
     return candidates
