@@ -6,7 +6,10 @@ class RankedVoteRunner:
     def __init__(self, rankedVote, add_remove):
         self.ranked_vote = rankedVote
         self.add_remove_allowed = add_remove
-        self.add_order = self.best_add_order()
+        if add_remove is True:
+            self.add_order = self.best_add_order()
+        else:
+            self.add_order = []
 
     def best_add_order(self):
         loop_length = len(self.ranked_vote.backup_candidates_copy)
@@ -139,7 +142,7 @@ class RankedVoteRunner:
         breakdown = self.ranked_vote.borda_count()
         winner = max(breakdown, key=breakdown.get)
 
-        return winner, json
+        return winner
 
     def run_boardacount_true(self):
         updates = {}
@@ -169,7 +172,7 @@ class RankedVoteRunner:
             return ""
         winner = max(breakdown, key=breakdown.get)
 
-        return winner, json
+        return winner
 
     def run_copeland_true(self):
         updates = {}
@@ -201,7 +204,7 @@ class RankedVoteRunner:
         breakdown = self.ranked_vote.minmax_method()
         winner = max(breakdown, key=breakdown.get)
 
-        return winner, json
+        return winner
 
     def run_minmax_true(self):
         updates = {}
@@ -227,7 +230,7 @@ class RankedVoteRunner:
         updates = {"nil": "nil"}
         json = {"RP": updates}
         winner = self.ranked_vote.ranked_pairs()
-        return winner, json
+        return winner
 
     def run_rankedpairs_true(self):
         updates = {}

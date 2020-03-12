@@ -9,13 +9,14 @@ import BallotEdditRanked from "./ranked_ballot_add";
 import BallotEdditScore from "./score_ballot_add";
 import RankedBallotList from "./ranked_ballot_list";
 import CandidateToWin from "./candidate_to_win";
+import RankedButton from "./send_api_button_ranked";
 import './App.css';
 
 class RankedPage extends React.Component{
 
   constructor(props) {
     super(props);
-    this.state = {items: [], ballots: [], similarities: {}, candidateToWin:""};
+    this.state = {items: [], ballots: [], similarities: {}, candidateToWin:"", edditable: false};
     this.add_candidate = this.add_candidate.bind(this);
     this.delete_candidate = this.delete_candidate.bind(this);
     this.add_ballot = this.add_ballot.bind(this);
@@ -38,6 +39,7 @@ class RankedPage extends React.Component{
           <RankedBallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
           <button onClick={() => this.populate_similarities()}> add similarities</button>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
+          <RankedButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable}  candidatetowin={this.state.candidateToWin} similarities={this.state.similarities}/>
         </div>
 
      
@@ -202,6 +204,11 @@ class RankedPage extends React.Component{
 
   populate_similarities(){
     var dict_to_add = {};
+    if (this.state.edditable === false){
+      this.setState(state => ({
+        edditable: true,
+      }));
+    }
     for(var i = 0 ; i < this.state.items.length; i++){
       var currcand = this.state.items[i].text;
       
