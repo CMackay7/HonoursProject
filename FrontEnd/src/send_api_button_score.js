@@ -2,7 +2,7 @@ import React from 'react';
 
 import './App.css';
 
-class PluralityButton extends React.Component{
+class ScoreButton extends React.Component{
 
     constructor(props) {
         super(props);
@@ -30,45 +30,35 @@ class PluralityButton extends React.Component{
         var edditingjson = '"edditing":"' + edditstring + '",';
 
         jsonString = jsonString + edditingjson + candidatetowinjson + canidatejson + ballotstring + "}";
-        //console.log(jsonString);
+        console.log(jsonString);
         //console.log(canidatejson);
-        var jsonobject = JSON.parse(jsonString);
-        var returned = this.fetchFromApi(jsonobject);
-        console.log(returned);
-    }
-
-    async fetchFromApi(jsonobject){
-        try{
-            let response = await fetch('http://localhost:5000/plurality/', {
-                            method: 'POST',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                },
-                                body: jsonobject
-                            })
-            
-            let jsonresponce = await response.json();
-            return jsonresponce;
-        } catch (error){
-            console.error(error);
-        }
     }
 
     create_plurality_ballot_string(ballots){
         var ballotstring = '"ballots": {';
         for(var i = 0; i < ballots.length; i++){
             var currBallot = ballots[i];
-            var candidateName = currBallot.candidate;
+            var currentbreakdown = currBallot.ballot;
             var votes = currBallot.votes;
             var currstring = "";
-            if (i === ballots.length -1){
-                currstring = '"' + candidateName + '":"' + votes + '"}';
-            } else {
-                currstring = '"' + candidateName + '":"' + votes + '",';
-            }
+            var addstring = '"';
+            for(var x = 0; x < currentbreakdown.length; x++){
 
-            ballotstring = ballotstring + currstring
+                var currcand = currentbreakdown[x]
+                
+                if(x === (currBallot.ballot.length) -1){
+                    addstring = addstring + currcand.candidate + ":" + currcand.score + '": ';
+                } else {
+                    addstring = addstring + currcand.candidate + ":"+ currcand.score + '//';
+                }             
+            }
+            if (i === (ballots.length - 1)){
+                addstring = addstring + '"' + votes + '"}'
+            }else{
+                addstring = addstring + '"' + votes + '",'
+            }
+            
+            ballotstring = ballotstring + addstring
         }
 
         return ballotstring
@@ -122,4 +112,4 @@ class PluralityButton extends React.Component{
 }
 
 
-export default PluralityButton;
+export default ScoreButton;
