@@ -8,6 +8,7 @@ class PluralityButton extends React.Component{
         super(props);
         this.create_json_string = this.create_json_string.bind(this)
     }
+
     
     render(){
         return(
@@ -37,22 +38,35 @@ class PluralityButton extends React.Component{
         console.log(returned);
     }
 
+
+
+
     async fetchFromApi(jsonobject){
+        
+        // fetch('http://vps755069.ovh.net/plurality')
+        // .then(results => {console.log(results)})       
+
+        // console.log("hello")
+        
+        const options = {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonobject)
+        }
+        
         try{
-            let response = await fetch('http://localhost:5000/plurality/', {
-                            method: 'POST',
-                                headers: {
-                                    'Accept': 'application/json',
-                                    'Content-Type': 'application/json',
-                                },
-                                body: jsonobject
-                            })
+            let response = await fetch('http://vps755069.ovh.net/plurality', options);
             
             let jsonresponce = await response.json();
+            console.log(jsonresponce)
             return jsonresponce;
         } catch (error){
             console.error(error);
         }
+        
     }
 
     create_plurality_ballot_string(ballots){
