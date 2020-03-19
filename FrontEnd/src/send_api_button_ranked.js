@@ -31,7 +31,40 @@ class RankedButton extends React.Component{
 
         jsonString = jsonString + edditingjson + candidatetowinjson + canidatejson + ballotstring + "}";
         console.log(jsonString);
+        var jsonobject = JSON.parse(jsonString);
+        var returned = this.fetchFromApi(jsonobject);
         //console.log(canidatejson);
+    }
+    async fetchFromApi(jsonobject){
+        
+        // fetch('http://vps755069.ovh.net/plurality')
+        // .then(results => {console.log(results)})       
+
+        // console.log("hello")
+        
+        const options = {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(jsonobject)
+        }
+        
+        try{
+            let response = await fetch('http://vps755069.ovh.net/ranked', options);
+            
+            let jsonresponce = await response.json();
+            console.log(response)
+            this.returnedFromApi(jsonresponce)
+        } catch (error){
+            console.error(error);
+        }
+        
+    }
+
+    returnedFromApi(json){
+        console.log(json)
     }
 
     create_plurality_ballot_string(ballots){

@@ -35,7 +35,7 @@ class PluralityButton extends React.Component{
         //console.log(canidatejson);
         var jsonobject = JSON.parse(jsonString);
         var returned = this.fetchFromApi(jsonobject);
-        console.log(returned);
+
     }
 
 
@@ -62,11 +62,15 @@ class PluralityButton extends React.Component{
             
             let jsonresponce = await response.json();
             console.log(jsonresponce)
-            return jsonresponce;
+            this.returnedFromApi(jsonresponce)
         } catch (error){
             console.error(error);
         }
         
+    }
+
+    returnedFromApi(json){
+        console.log(json)
     }
 
     create_plurality_ballot_string(ballots){
