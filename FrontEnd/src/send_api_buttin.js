@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './App.css';
+import {Link} from 'react-router-dom'
 
 class PluralityButton extends React.Component{
 
@@ -13,7 +14,10 @@ class PluralityButton extends React.Component{
     render(){
         return(
             <div>
+                <Link to={{ pathname: '/results', state: { foo: 'bar'} }}>
                 <button onClick={() =>  this.create_json_string()}> Run Election </button>
+                </Link>
+                
             </div>
         )
     }

@@ -13,6 +13,7 @@ import Nav from './Nav';
 import NormalPage from './NormalBallotPage';
 import ScorePage from './ScoreBallotPage';
 import './App.css';
+import ResultsPage from './ResultsPage'
 
 class App extends React.Component{
 
@@ -26,6 +27,7 @@ class App extends React.Component{
             <Route path="/" exact component ={NormalPage} />
             <Route path="/ranked" component={RankedPage}/>
             <Route path="/score" component={ScorePage}/>
+            <Route path="/results" component={ResultsPage}/>
           </Switch>
         </div>
       </Router>

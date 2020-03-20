@@ -32,6 +32,7 @@ class ScoreButton extends React.Component{
         jsonString = jsonString + edditingjson + candidatetowinjson + canidatejson + ballotstring + "}";
         console.log(jsonString);
         var jsonobject = JSON.parse(jsonString);
+        
         var returned = this.fetchFromApi(jsonobject);
         //console.log(canidatejson);
         //console.log(canidatejson);
