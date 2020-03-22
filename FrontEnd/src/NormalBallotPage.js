@@ -39,7 +39,7 @@ class NormalPage extends React.Component{
           <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
           <CandidateToWin set_candidate_to_win = {this.set_candidate_to_win} candidates={this.state.items}/>
           <BallotEddit candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
-          <h3>Ballots</h3>
+          <h3>Ballsadots</h3>
           <BallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
           <button onClick={() => this.populate_similarities()}> add similarities</button>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>

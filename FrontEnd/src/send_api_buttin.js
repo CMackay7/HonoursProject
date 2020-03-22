@@ -1,12 +1,14 @@
 import React from 'react';
 
 import './App.css';
-import {Link} from 'react-router-dom'
+import {Link, useHistory} from 'react-router-dom'
+import history from './history';
 
 class PluralityButton extends React.Component{
 
     constructor(props) {
         super(props);
+        
         this.create_json_string = this.create_json_string.bind(this)
     }
 
@@ -14,9 +16,11 @@ class PluralityButton extends React.Component{
     render(){
         return(
             <div>
-                <Link to={{ pathname: '/results', state: { foo: 'bar'} }}>
+                <h3>
+                    testfjdvnkfjnv
+                    </h3>
                 <button onClick={() =>  this.create_json_string()}> Run Election </button>
-                </Link>
+                
                 
             </div>
         )
@@ -38,8 +42,16 @@ class PluralityButton extends React.Component{
         //console.log(jsonString);
         //console.log(canidatejson);
         var jsonobject = JSON.parse(jsonString);
-        var returned = this.fetchFromApi(jsonobject);
-
+       // var returned = this.fetchFromApi(jsonobject);
+        //let history = useHistory();
+        history.push({
+            pathname: '/results',
+            state: {
+              id: Date.now(),
+              json: JSON.stringify(jsonobject),
+              urltouse: 'plurality'
+            }});
+            window.location.reload()
     }
 
 
@@ -52,13 +64,15 @@ class PluralityButton extends React.Component{
 
         // console.log("hello")
         
+        console.log(jsonobject)
+
         const options = {
             method: 'post',
             headers: {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(jsonobject)
+            body: jsonobject
         }
         
         try{

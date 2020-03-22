@@ -14,13 +14,17 @@ import NormalPage from './NormalBallotPage';
 import ScorePage from './ScoreBallotPage';
 import './App.css';
 import ResultsPage from './ResultsPage'
+import history from './history'
 
 class App extends React.Component{
 
   render(){
     return (
       <div>
-      <Router>
+        <h3>
+          is this showing
+          </h3>
+      <Router history={history}>
         <div>
           <Nav/>
           <Switch>

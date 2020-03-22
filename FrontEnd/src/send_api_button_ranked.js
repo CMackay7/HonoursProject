@@ -1,5 +1,5 @@
 import React from 'react';
-
+import history from './history';
 import './App.css';
 
 class RankedButton extends React.Component{
@@ -32,7 +32,16 @@ class RankedButton extends React.Component{
         jsonString = jsonString + edditingjson + candidatetowinjson + canidatejson + ballotstring + "}";
         console.log(jsonString);
         var jsonobject = JSON.parse(jsonString);
-        var returned = this.fetchFromApi(jsonobject);
+        //var returned = this.fetchFromApi(jsonobject);
+
+        history.push({
+            pathname: '/results',
+            state: {
+              id: Date.now(),
+              json: JSON.stringify(jsonobject),
+              urltouse: 'ranked'
+            }});
+            window.location.reload()
         //console.log(canidatejson);
     }
     async fetchFromApi(jsonobject){

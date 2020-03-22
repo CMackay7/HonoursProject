@@ -19,6 +19,9 @@ class VoteResultsDisplay extends React.Component{
 
   constructor(props) {
     super(props);
+    // var json = this.props.json
+    // alert(json.length)
+    this.createList = this.createList.bind(this)
     var votes_dict =  this.delare_vote_dictionary()
     this.state = {vote_code: votes_dict};
   }
@@ -27,8 +30,11 @@ class VoteResultsDisplay extends React.Component{
     const displayList = this.createList();
     return (
       <div>
-            
-
+        <ul>
+        {displayList.map(pannel => (
+          pannel
+        ))}
+      </ul>
       </div>
     );
   }
@@ -41,9 +47,22 @@ class VoteResultsDisplay extends React.Component{
                 ))}
             </Accordion>
   */
-  createList(json){
-    //json.forEach(function(obj) { console.log(obj.id); });
-    return "";
+
+  createList(){
+    // var jsonlength = this.props.json.length
+    var returndict = []
+    var json = this.props.json;
+    var keys = Object.keys(json);
+    var jsonlength = Object.keys(json).length;
+    console.log(keys)
+    //alert(jsonlength)
+    //console.log(json)
+    for(var i = 0; i < jsonlength; i++){
+      var curr_system = keys[i];
+      var translated_system = this.state.vote_code[curr_system]; 
+      returndict = returndict.concat(<li>{translated_system}</li>);
+    }
+    return returndict;
   }
 
   // add every vote type and corresponding code to a dictionary so it can be quickly indexed
@@ -63,6 +82,8 @@ class VoteResultsDisplay extends React.Component{
 
     return dictionary_to_return;
   } 
+
+
 
 }
 export default VoteResultsDisplay;
