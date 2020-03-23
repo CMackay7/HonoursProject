@@ -30,11 +30,11 @@ class VoteResultsDisplay extends React.Component{
     const displayList = this.createList();
     return (
       <div>
-        <ul>
-        {displayList.map(pannel => (
-          pannel
-        ))}
-      </ul>
+             <Accordion atomic={true}>
+                {displayList.map(pannel => (
+                    pannel
+                ))}
+            </Accordion>
       </div>
     );
   }
@@ -49,20 +49,22 @@ class VoteResultsDisplay extends React.Component{
   */
 
   createList(){
-    // var jsonlength = this.props.json.length
-    var returndict = []
+    var returnaccordion = []
+    var currdict = []
     var json = this.props.json;
     var keys = Object.keys(json);
     var jsonlength = Object.keys(json).length;
     console.log(keys)
-    //alert(jsonlength)
-    //console.log(json)
+
     for(var i = 0; i < jsonlength; i++){
       var curr_system = keys[i];
       var translated_system = this.state.vote_code[curr_system]; 
-      returndict = returndict.concat(<li>{translated_system}</li>);
+      currdict = (<p>your candidate won in {translated_system}</p>)
+      returnaccordion = returnaccordion.concat((<AccordionItem title={translated_system}>
+        <p> your selected candidate won in {translated_system}  </p>
+    </AccordionItem>)) ;
     }
-    return returndict;
+    return returnaccordion;
   }
 
   // add every vote type and corresponding code to a dictionary so it can be quickly indexed

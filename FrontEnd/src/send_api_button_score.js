@@ -1,6 +1,7 @@
 import React from 'react';
 
 import './App.css';
+import history from './history';
 
 class ScoreButton extends React.Component{
 
@@ -32,8 +33,15 @@ class ScoreButton extends React.Component{
         jsonString = jsonString + edditingjson + candidatetowinjson + canidatejson + ballotstring + "}";
         console.log(jsonString);
         var jsonobject = JSON.parse(jsonString);
-        
-        var returned = this.fetchFromApi(jsonobject);
+        history.push({
+            pathname: '/results',
+            state: {
+              id: Date.now(),
+              json: JSON.stringify(jsonobject),
+              urltouse: 'score'
+            }});
+            window.location.reload()
+        //var returned = this.fetchFromApi(jsonobject);
         //console.log(canidatejson);
         //console.log(canidatejson);
     }
