@@ -1,9 +1,9 @@
-from Vote import Vote
+from .Vote import Vote
 import copy
 from collections import defaultdict
-import RankedBallot
+from . import RankedBallot
 from itertools import combinations
-import Graph
+from . import Graph
 
 class RankedVote(Vote):
     # Candidates is the only one of these which contains the actual objects do not modify or copy
@@ -130,6 +130,9 @@ class RankedVote(Vote):
 
     def find_best_remove(self):
         num_of_cands = len(self.valid_candidates_copy)
+        if num_of_cands == 2:
+            return ""
+
         storenewvals = defaultdict(int)
         for ballot in self.voteBreakdown_copy:
             # for candidate in self.candidates_copy:
@@ -147,8 +150,8 @@ class RankedVote(Vote):
 
     # This method will remove a candidate from a ranked vote at the moment you do not need to pass it anything when is
     # is called as it will workout the best candidate to remove wile running
-    def remove_candidate(self):
-        candidate_to_remove = self.find_best_remove()
+    def remove_candidate(self, candidate_to_remove):
+        #andidate_to_remove = self.find_best_remove()
        # changeable_vote = copy.deepcopy(self.voteBreakdown_copy)
         #self.candidates_copy = filter(lambda x: x.CandidateName != candidate_to_remove.CandidateName, self.candidates_copy)
         self.backup_candidates_copy.append(candidate_to_remove)
@@ -177,10 +180,10 @@ class RankedVote(Vote):
         counter = 1
         newranking = {}
         for place in ranking:
-            if not place == counter:
-                newranking[counter - 1] = ranking[place]
-            else:
-                newranking[counter] = ranking[place]
+#            if not place == counter:
+#                newranking[counter - 1] = ranking[place]
+ #           else:
+            newranking[counter] = ranking[place]
 
             counter += 1
 
@@ -339,6 +342,9 @@ class RankedVote(Vote):
 
     def delete_backup(self, candidate):
         self.backup_candidates_copy.remove(candidate)
+
+    def delete_valid(self, candidate):
+        self.valid_candidates_copy.remove(candidate)
 
     # todo finish and test this code
     def ranked_pairs(self):

@@ -1,4 +1,5 @@
-from Vote import Vote
+from .Vote import Vote
+from collections import defaultdict
 
 class PluralityVote(Vote):
 
@@ -43,13 +44,18 @@ class PluralityVote(Vote):
         return bestcandidate
 
 
-    def best_to_remove(self):
-        bestcandidate = ""
-        bestcandidatevotes = 0
-        for backupcand in self.backup_candidates_copy:
-            print("")
-            # TODO: implement this
-            # currentmath = self.similarity_difference()
+
+    def find_best_remove(self):
+        num_of_cands = len(self.valid_candidates_copy)
+        if num_of_cands == 2:
+            return ""
+
+        storenewvals = defaultdict(int)
+        for candidate in self.valid_candidates:
+            # for candidate in self.candidates_copy:
+            currcand_votes = self.voteBreakdown_copy[candidate]
+            storenewvals[candidate] += currcand_votes
+        return max(storenewvals, key=storenewvals.get)
 
     # workout if it is worth addind a candidate
     # find the similarity from a candidate and the candidate to be added

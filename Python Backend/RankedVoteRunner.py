@@ -1,4 +1,4 @@
-from RankedVote import RankedVote
+from .RankedVote import RankedVote
 import operator
 
 class RankedVoteRunner:
@@ -8,8 +8,10 @@ class RankedVoteRunner:
         self.add_remove_allowed = add_remove
         if add_remove is True:
             self.add_order = self.best_add_order()
+            self.remove_order = self.best_remove_order()
         else:
             self.add_order = []
+            self.remove_order = []
 
     def best_add_order(self):
         loop_length = len(self.ranked_vote.backup_candidates_copy)
@@ -25,6 +27,20 @@ class RankedVoteRunner:
 
         return returndict
 
+    def best_remove_order(self):
+        loop_length = len(self.ranked_vote.valid_candidates_copy)
+
+        returndict = []
+
+        for i in range(loop_length):
+            add = self.ranked_vote.find_best_remove()
+            if add == "":
+                break
+            returndict.append(add)
+            self.ranked_vote.delete_valid(add)
+        self.ranked_vote.reset()
+        return returndict
+
 
 
     def run_election(self):
@@ -33,16 +49,16 @@ class RankedVoteRunner:
         if self.add_remove_allowed is False:
             runoff = self.run_instantrunoff()
             if runoff == candidate_to_win:
-                return_dict.update({"IRN":""})
+                return_dict.update({"IRN": ""})
             av_plus = self.run_avplus()
             if av_plus == candidate_to_win:
                 return_dict.update({"AVP": ""})
             borda = self.run_bordacount()
             if borda == candidate_to_win:
-                return_dict.update({"BC":""})
+                return_dict.update({"BC": ""})
             copeland = self.run_copeland()
             if copeland == candidate_to_win:
-                return_dict.update({"CPLN":""})
+                return_dict.update({"CPLN": ""})
             minmax = self.run_minmax()
             if minmax == candidate_to_win:
                 return_dict.update({"MNX":""})
@@ -107,6 +123,17 @@ class RankedVoteRunner:
                 if winner == self.ranked_vote.candidateToWin:
                     json["IRN"] = updates
                     return winner, json
+
+            for loop in range(len(self.remove_order)):
+                remove = self.remove_order[loop]
+                self.ranked_vote.remove_candidate(remove)
+                updates[remove] = "removed"
+                breakdown = self.ranked_vote.instantrunoffmethod()
+                winner = max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["IRN"] = updates
+                    return winner, json
+
         return winner, json
 
     def run_avplus(self):
@@ -135,6 +162,16 @@ class RankedVoteRunner:
                 if winner == self.ranked_vote.candidateToWin:
                     json["AVP"] = updates
                     return winner, json
+
+            for loop in range(len(self.remove_order)):
+                remove = self.remove_order[loop]
+                self.ranked_vote.remove_candidate(remove)
+                updates[remove] = "removed"
+                breakdown = self.ranked_vote.av_plus()
+                winner = max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["AVP"] = updates
+                    return winner, json
         return winner, json
 
     def run_bordacount(self):
@@ -157,6 +194,16 @@ class RankedVoteRunner:
                 add = self.ranked_vote.find_borda_add()
                 self.ranked_vote.add_candidate(add)
                 updates[add] = "added"
+                breakdown = self.ranked_vote.borda_count()
+                winner = max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["BC"] = updates
+                    return winner, json
+
+            for loop in range(len(self.remove_order)):
+                remove = self.remove_order[loop]
+                self.ranked_vote.remove_candidate(remove)
+                updates[remove] = "removed"
                 breakdown = self.ranked_vote.borda_count()
                 winner = max(breakdown, key=breakdown.get)
                 if winner == self.ranked_vote.candidateToWin:
@@ -196,6 +243,16 @@ class RankedVoteRunner:
                 if winner == self.ranked_vote.candidateToWin:
                     json["CPLN"] = updates
                     return winner, json
+
+            for loop in range(len(self.remove_order)):
+                remove = self.remove_order[loop]
+                self.ranked_vote.remove_candidate(remove)
+                updates[remove] = "removed"
+                breakdown = self.ranked_vote.copeland_method()
+                winner = max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["CPLN"] = updates
+                    return winner, json
         return winner, json
 
     def run_minmax(self):
@@ -224,6 +281,15 @@ class RankedVoteRunner:
                 if winner == self.ranked_vote.candidateToWin:
                     json["MNX"] = updates
                     return winner, json
+            for loop in range(len(self.remove_order)):
+                remove = self.remove_order[loop]
+                self.ranked_vote.remove_candidate(remove)
+                updates[remove] = "removed"
+                breakdown = self.ranked_vote.minmax_method()
+                winner = max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["MNX"] = updates
+                    return winner, json
         return winner, json
 
     def run_rankedpairs(self):
@@ -247,6 +313,16 @@ class RankedVoteRunner:
                 updates[add] = "added"
                 breakdown = self.ranked_vote.ranked_pairs()
                 winner = breakdown #max(breakdown, key=breakdown.get)
+                if winner == self.ranked_vote.candidateToWin:
+                    json["RP"] = updates
+                    return winner, json
+
+            for loop in range(len(self.remove_order)):
+                remove = self.remove_order[loop]
+                self.ranked_vote.remove_candidate(remove)
+                updates[remove] = "removed"
+                breakdown = self.ranked_vote.ranked_pairs()
+                winner = breakdown
                 if winner == self.ranked_vote.candidateToWin:
                     json["RP"] = updates
                     return winner, json

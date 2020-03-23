@@ -1,16 +1,18 @@
 from flask import Flask
 from flask import request
-import json_vote_decoder
-from PluralityVote import PluralityVote
-from PluralityVoteRunner import PluralityVoteRunner
-from RankedVote import RankedVote
-from RankedVoteRunner import RankedVoteRunner
-from ScoreVote import ScoreVote
-from ScoreVoteRunner import ScoreVoteRunner
+#from flask_cors import CORS
+from . import json_vote_decoder
+from .PluralityVote import PluralityVote
+from .PluralityVoteRunner import PluralityVoteRunner
+from .RankedVote import RankedVote
+from .RankedVoteRunner import RankedVoteRunner
+from .ScoreVote import ScoreVote
+from .ScoreVoteRunner import ScoreVoteRunner
 import json
 
 app = Flask(__name__)
 
+#CORS(app)
 
 @app.route('/plurality', methods=['POST'])
 def handle_plurality():

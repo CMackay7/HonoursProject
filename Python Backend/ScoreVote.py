@@ -1,9 +1,9 @@
-from Vote import Vote
+from .Vote import Vote
 import copy
 from collections import defaultdict
-import RankedBallot
+from . import RankedBallot
 from itertools import combinations
-import Graph
+from . import Graph
 
 
 class ScoreVote(Vote):

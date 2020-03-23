@@ -28,15 +28,23 @@ class VoteResultsDisplay extends React.Component{
 
   render(){
     const displayList = this.createList();
+    if (displayList.length === 0){
+      return(
+        <div>
+          Your chosen candidate did not win in any voting system
+        </div>
+      );
+    } else {
     return (
-      <div>
-             <Accordion atomic={true}>
-                {displayList.map(pannel => (
-                    pannel
-                ))}
-            </Accordion>
-      </div>
-    );
+        <div>
+          <Accordion atomic={true}>
+            {displayList.map(pannel => (
+              pannel
+            ))}
+          </Accordion>
+        </div>
+      );
+    }
   }
 
 

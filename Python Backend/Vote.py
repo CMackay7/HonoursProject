@@ -43,16 +43,21 @@ class Vote:
         self.backup_candidates_copy.remove(candidate_added)
 
     def remove_candidate(self, candidate_removed):
-        tosend = set(self.candidates).difference(self.backup_candidates)
-        vote_change_profile = candidate_removed.candidate_removed(self.voteBreakdown[candidate_removed], tosend)
+        tosend = set(self.valid_candidates).difference(self.backup_candidates)
+        candidate_removed_obj = self.find_candidate(candidate_removed)
+        vote_change_profile = candidate_removed_obj.candidate_removed(self.voteBreakdown[candidate_removed], tosend)
 
-        for candidate in self.candidates:
-            if candidate != candidate_removed:
-                votes_lost = vote_change_profile[candidate.CandidateName]
-                self.voteBreakdown[candidate] += votes_lost
+        if vote_change_profile == 0:
+            del self.voteBreakdown_copy[candidate_removed]
 
-        del self.voteBreakdown[candidate_removed]
-        self.backup_candidates.add(candidate_removed)
+        else:
+            for candidate in self.candidates:
+                if candidate != candidate_removed:
+                    votes_lost = vote_change_profile[candidate]
+                    self.voteBreakdown_copy[candidate] += votes_lost
+
+            del self.voteBreakdown_copy[candidate_removed]
+            self.backup_candidates_copy.add(candidate_removed)
 
 
 # todo fix candidatecopy not in vote

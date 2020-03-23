@@ -18,23 +18,25 @@ class Candidate:
     def candidate_removed(self, votes, candidates):
         total_similarity = self.total_similarity(candidates)
         # Creates the amount of votes for each point
-        similarity_percentage = 100.0/float(total_similarity)
-        percentHash = dict()
+        if not total_similarity == 0:
+            similarity_percentage = 100.0/float(total_similarity)
+            percentHash = dict()
 
-        # Distribute the votes between other candidates
-        for key in candidates:
-            if key.CandidateName != self.CandidateName:
-                percentage_gained = (similarity_percentage * self.CandidateSimilarity[key.CandidateName]) / 100.0
-                votes_gained = votes * percentage_gained
-                percentHash[str(key.CandidateName)] = int(votes_gained)
-
+            # Distribute the votes between other candidates
+            for key in candidates:
+                if key != self.CandidateName:
+                    percentage_gained = (similarity_percentage * self.CandidateSimilarity[key]) / 100.0
+                    votes_gained = votes * percentage_gained
+                    percentHash[str(key)] = int(votes_gained)
+        else:
+            percentHash = 0
         return percentHash
 
     def total_similarity(self, candidates):
         total = 0
         for key in candidates:
-            if key.CandidateName != self.CandidateName:
-                total += self.CandidateSimilarity[key.CandidateName]
+            if key != self.CandidateName:
+                total += int(self.CandidateSimilarity[key])
 
         return total
 

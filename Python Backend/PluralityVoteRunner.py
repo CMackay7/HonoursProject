@@ -38,6 +38,17 @@ class PluralityVoteRunner:
                     if winner == self.plurality_vote.candidateToWin:
                         json["fptp"] = updates
                         return winner, json
+
+                loop_len = len(self.plurality_vote.valid_candidates_copy)
+                for loop in range(loop_len):
+                    remove = self.plurality_vote.find_best_remove()
+                    self.plurality_vote.remove_candidate(remove)
+                    updates[remove] = "removed"
+                    breakdown = self.plurality_vote.calc_winner()
+                    winner = breakdown
+                    if winner == self.plurality_vote.candidateToWin:
+                        json["fptp"] = updates
+                        return winner, json
         else:
             return winner, json
 

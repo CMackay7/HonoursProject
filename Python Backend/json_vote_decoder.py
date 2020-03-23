@@ -1,8 +1,8 @@
 import json
-import RankedBallot
-from ScoreBallot import ScoreBallot
+from . import RankedBallot
+from .ScoreBallot import ScoreBallot
 from collections import defaultdict
-from Candidate import Candidate
+from .Candidate import Candidate
 
 
 def get_ballots_plurality(ballot_data):
