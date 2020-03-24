@@ -62,17 +62,68 @@ class VoteResultsDisplay extends React.Component{
     var json = this.props.json;
     var keys = Object.keys(json);
     var jsonlength = Object.keys(json).length;
-    console.log(keys)
+    console.log(json)
 
     for(var i = 0; i < jsonlength; i++){
       var curr_system = keys[i];
       var translated_system = this.state.vote_code[curr_system]; 
-      currdict = (<p>your candidate won in {translated_system}</p>)
-      returnaccordion = returnaccordion.concat((<AccordionItem title={translated_system}>
-        <p> your selected candidate won in {translated_system}  </p>
-    </AccordionItem>)) ;
+      var edditdata = json[curr_system]
+      var candidates_changed = Object.keys(edditdata)
+      if (candidates_changed.length > 0){
+
+        returnaccordion = returnaccordion.concat((<AccordionItem title={translated_system}>
+          <p>your candidate will win {this.convert_edditing(edditdata, candidates_changed)}</p>
+      </AccordionItem>)) ;
+      } else {
+        returnaccordion = returnaccordion.concat((<AccordionItem title={translated_system}>
+          <p> your selected candidate won in {translated_system}  </p>
+          </AccordionItem>)) ;
+      }
+
+
     }
     return returnaccordion;
+  }
+
+  convert_edditing(edditdata, candidates_changed){
+    var returnstring = "if ";
+    var removedstring = "";
+    var addedstring = "";
+    var stringlengthadded = 0;
+    var stringlengthremoved = 0;
+    for(var i = 0; i < candidates_changed.length; i++){
+      
+      if(edditdata[candidates_changed[i]] === "removed"){
+        if (stringlengthremoved === 0) {
+          removedstring = removedstring + candidates_changed[i]; 
+          stringlengthremoved = 1;
+        } else {
+          removedstring = removedstring + ", " + candidates_changed[i];
+        }
+      } else {
+        if (stringlengthadded === 0){
+          addedstring = addedstring + candidates_changed[i];
+          stringlengthadded = 1;
+        } else {
+          addedstring = addedstring + ", " + candidates_changed[i];
+        }
+      }
+    }
+
+    if(stringlengthadded === 1){
+      returnstring = returnstring + addedstring + " are added to the ballot"
+
+      if(stringlengthremoved === 0){
+        returnstring = returnstring + "and "
+      }
+    }
+
+    if(stringlengthremoved ===1){
+      returnstring = returnstring + removedstring + " are removed from the ballot."
+    }
+    console.log(removedstring);
+    return returnstring;
+
   }
 
   // add every vote type and corresponding code to a dictionary so it can be quickly indexed

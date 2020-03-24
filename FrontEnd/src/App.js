@@ -21,9 +21,6 @@ class App extends React.Component{
   render(){
     return (
       <div>
-        <h3>
-          is this showing
-          </h3>
       <Router history={history}>
         <div>
           <Nav/>
