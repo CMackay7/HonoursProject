@@ -34,7 +34,11 @@ class NameFile extends React.Component {
 
     saveFile(){
         var filename = this.state.filename;
-        alert("hello");
+        this.setState(state => ({
+            
+            filename: "",
+
+        }));
         var filename = filename + ".txt";
         this.props.save(filename);
     }

@@ -15,6 +15,7 @@ import ScorePage from './ScoreBallotPage';
 import './App.css';
 import ResultsPage from './ResultsPage'
 import history from './history'
+import FromFilePage from './FromFilePage'
 
 class App extends React.Component{
 
@@ -29,6 +30,7 @@ class App extends React.Component{
             <Route path="/ranked" component={RankedPage}/>
             <Route path="/score" component={ScorePage}/>
             <Route path="/results" component={ResultsPage}/>
+            <Route path="/from_file" component={FromFilePage}/>
           </Switch>
         </div>
       </Router>

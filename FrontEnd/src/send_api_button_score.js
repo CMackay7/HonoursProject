@@ -2,22 +2,25 @@ import React from 'react';
 
 import './App.css';
 import history from './history';
+import NameFile from './name_file'
 
 class ScoreButton extends React.Component{
 
     constructor(props) {
         super(props);
         this.create_json_string = this.create_json_string.bind(this)
+        this.downloadFile = this.downloadFile.bind(this)
     }
     
     render(){
         return(
             <div>
-                <button onClick={() =>  this.create_json_string()}> Run Election </button>
+                <button onClick={() =>  this.create_json_string(true)}> Run Election </button>
+                <NameFile save={this.downloadFile}/>
             </div>
         )
     }
-    create_json_string(){
+    create_json_string(tosend){
         var jsonString = "{";
         var ballotstring = this.create_plurality_ballot_string(this.props.ballots);
         var canidatejson = this.create_candidates_json(this.props.candidates, this.props.similarities,this.props.edditable)
@@ -33,19 +36,29 @@ class ScoreButton extends React.Component{
         jsonString = jsonString + edditingjson + candidatetowinjson + canidatejson + ballotstring + "}";
         console.log(jsonString);
         var jsonobject = JSON.parse(jsonString);
-        history.push({
-            pathname: '/results',
-            state: {
-              id: Date.now(),
-              json: JSON.stringify(jsonobject),
-              urltouse: 'score'
-            }});
-            window.location.reload()
-        //var returned = this.fetchFromApi(jsonobject);
-        //console.log(canidatejson);
+        if (tosend){
+            history.push({
+                pathname: '/results',
+                state: {
+                  id: Date.now(),
+                  json: JSON.stringify(jsonobject),
+                  urltouse: 'plurality'
+                }});
+                window.location.reload()
+        } else {
+            return jsonString
+        }
         //console.log(canidatejson);
     }
 
+
+    downloadFile(name){
+        var jsonstring = this.create_json_string(false);
+        var FileSaver = require('file-saver');
+        var blob = new Blob([jsonstring], {type: "text/plain;charset=utf-8"});
+        FileSaver.saveAs(blob, name);
+    }
+    
     async fetchFromApi(jsonobject){
         
         // fetch('http://vps755069.ovh.net/plurality')

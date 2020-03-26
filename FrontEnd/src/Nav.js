@@ -15,6 +15,9 @@ function Nav() {
             <Link to='/score'>
                 <li>Score</li>
             </Link>
+            <Link to='/from_file'>
+                <li>From File</li>
+            </Link>
         </ul>
     </nav>
     );
