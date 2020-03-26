@@ -3,12 +3,14 @@ import React from 'react';
 import './App.css';
 import {Link, useHistory} from 'react-router-dom'
 import history from './history';
+import { saveAs } from 'file-saver';
+import NameFile from './name_file';
 
 class PluralityButton extends React.Component{
 
     constructor(props) {
         super(props);
-        
+        this.downloadFile = this.downloadFile.bind(this);
         this.create_json_string = this.create_json_string.bind(this)
     }
 
@@ -19,13 +21,17 @@ class PluralityButton extends React.Component{
                 <h3>
                     testfjdvnkfjnv
                     </h3>
-                <button onClick={() =>  this.create_json_string()}> Run Election </button>
+                <button onClick={() =>  this.create_json_string(true)}> Run Election </button>
+                <NameFile save={this.downloadFile}/>
                 
                 
             </div>
         )
     }
-    create_json_string(){
+
+    //<button onClick={() => this.downloadFile(false)}> Download File </button/
+    //
+    create_json_string(tosend){
         var jsonString = "{";
         var ballotstring = this.create_plurality_ballot_string(this.props.ballots);
         var canidatejson = this.create_candidates_json(this.props.candidates, this.props.similarities,this.props.edditable)
@@ -44,14 +50,26 @@ class PluralityButton extends React.Component{
         var jsonobject = JSON.parse(jsonString);
        // var returned = this.fetchFromApi(jsonobject);
         //let history = useHistory();
-        history.push({
-            pathname: '/results',
-            state: {
-              id: Date.now(),
-              json: JSON.stringify(jsonobject),
-              urltouse: 'plurality'
-            }});
-            window.location.reload()
+        if (tosend){
+            history.push({
+                pathname: '/results',
+                state: {
+                  id: Date.now(),
+                  json: JSON.stringify(jsonobject),
+                  urltouse: 'plurality'
+                }});
+                window.location.reload()
+        } else {
+            return jsonString
+        }
+
+    }
+
+    downloadFile(name){
+        var jsonstring = this.create_json_string(false);
+        var FileSaver = require('file-saver');
+        var blob = new Blob([jsonstring], {type: "text/plain;charset=utf-8"});
+        FileSaver.saveAs(blob, name);
     }
 
 
