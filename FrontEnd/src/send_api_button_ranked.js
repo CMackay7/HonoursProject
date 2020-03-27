@@ -43,7 +43,7 @@ class RankedButton extends React.Component{
                 state: {
                   id: Date.now(),
                   json: JSON.stringify(jsonobject),
-                  urltouse: 'plurality'
+                  urltouse: 'ranked'
                 }});
                 window.location.reload()
         } else {
@@ -53,6 +53,7 @@ class RankedButton extends React.Component{
 
     downloadFile(name){
         var jsonstring = this.create_json_string(false);
+        jsonstring = "ranked|" + jsonstring;
         var FileSaver = require('file-saver');
         var blob = new Blob([jsonstring], {type: "text/plain;charset=utf-8"});
         FileSaver.saveAs(blob, name);

@@ -42,7 +42,7 @@ class ScoreButton extends React.Component{
                 state: {
                   id: Date.now(),
                   json: JSON.stringify(jsonobject),
-                  urltouse: 'plurality'
+                  urltouse: 'score'
                 }});
                 window.location.reload()
         } else {
@@ -54,11 +54,12 @@ class ScoreButton extends React.Component{
 
     downloadFile(name){
         var jsonstring = this.create_json_string(false);
+        jsonstring = "score|" + jsonstring
         var FileSaver = require('file-saver');
         var blob = new Blob([jsonstring], {type: "text/plain;charset=utf-8"});
         FileSaver.saveAs(blob, name);
     }
-    
+
     async fetchFromApi(jsonobject){
         
         // fetch('http://vps755069.ovh.net/plurality')

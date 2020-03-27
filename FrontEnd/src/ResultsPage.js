@@ -62,9 +62,9 @@ if (this.state.datarecieved) {
 
       try{
         let response = await fetch(url, options);
-        
-        let jsonresponce = await response.json();
         console.log(response)
+        let jsonresponce = await response.json();
+
         this.returnedFromApi(jsonresponce)
     } catch (error){
         console.error(error);

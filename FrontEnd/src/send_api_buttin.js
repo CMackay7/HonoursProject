@@ -67,6 +67,7 @@ class PluralityButton extends React.Component{
 
     downloadFile(name){
         var jsonstring = this.create_json_string(false);
+        jsonstring = "plurality|" + jsonstring;
         var FileSaver = require('file-saver');
         var blob = new Blob([jsonstring], {type: "text/plain;charset=utf-8"});
         FileSaver.saveAs(blob, name);
