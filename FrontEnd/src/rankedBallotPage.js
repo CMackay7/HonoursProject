@@ -13,6 +13,12 @@ import RankedButton from "./send_api_button_ranked";
 import { JumbotronRanked } from './components/Jumbotron_Ranked';
 import { Layout } from './components/Layout';
 import './App.css';
+import styled from 'styled-components'
+
+const CustomButton = styled.button`
+  border-radius: 5px;
+  border: 0.5px solid black;
+`;
 
 class RankedPage extends React.Component{
 
@@ -40,7 +46,7 @@ class RankedPage extends React.Component{
           <BallotEdditRanked candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
           <h3>Ballots</h3>
           <RankedBallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
-          <button onClick={() => this.populate_similarities()}> add similarities</button>
+          <CustomButton onClick={() => this.populate_similarities()}> add similarities</CustomButton>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
           <RankedButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable}  candidatetowin={this.state.candidateToWin} similarities={this.state.similarities}/>
           </Layout>

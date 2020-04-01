@@ -66,7 +66,7 @@ class TodoList extends React.Component {
             id="new-todo"
             onChange={this.handleChange}
             value={this.state.text}
-            placeholder="Add Canidates"
+            placeholder="Add Candidates"
           />
           < InvisableButton name="heart">
             <ion-icon  name="add-outline" size="large"></ion-icon>
