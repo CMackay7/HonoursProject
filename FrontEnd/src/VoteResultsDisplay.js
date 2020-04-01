@@ -9,7 +9,7 @@ import React from 'react';
 // import BallotEdditScore from "./score_ballot_add";
 import RankedPage from "./rankedBallotPage";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import Nav from './Nav';
+//import Nav from './NavigationBar';
 import NormalPage from './NormalBallotPage';
 import { Accordion, AccordionItem } from 'react-light-accordion';
 import ScorePage from './ScoreBallotPage';

@@ -1,4 +1,51 @@
 import React from 'react';
+import styled from 'styled-components'
+
+const Title = styled.h3`
+font-size: 1.5em;
+
+`;
+
+const CustomInput = styled.input`
+font-size: 1.5em;
+border: none;
+border-bottom: 2.5px solid black;
+padding-left: 10px;
+margin-right: 5px;
+`;
+
+const Button = styled.button`
+    font-family: sans-serif;
+    font-size: 1.3rem;
+    background: white;
+    color: black;
+    
+    border-radius: 5px;
+
+    &:hover {
+      background: #9c9797;
+      
+        
+    }
+`;
+
+const InvisableButton = styled.button`
+  border: none;
+  background: white;
+  position: absolute;
+`;
+
+const Custdiv = styled.div`
+ion-icon{
+  margin-top: 7px;
+
+}
+`;
+
+
+
+//
+
 class TodoList extends React.Component {
     constructor(props) {
       super(props);
@@ -8,25 +55,25 @@ class TodoList extends React.Component {
       this.handleDelete = this.handleDelete.bind(this);
     }
   
+
+
     render() {
       return (
-        <div>
-        <h3>TODO</h3>
+        <Custdiv>
+        <Title>Candidates</Title>
         <form onSubmit={this.handleSubmit}>
-          <label htmlFor="new-todo">
-            What needs to be done?
-          </label>
-          <input
+          <CustomInput
             id="new-todo"
             onChange={this.handleChange}
             value={this.state.text}
+            placeholder="Add Canidates"
           />
-          <button>
-            Add Candidate
-          </button>
+          < InvisableButton name="heart">
+            <ion-icon  name="add-outline" size="large"></ion-icon>
+          </InvisableButton>
         </form>
         <List items={this.props.items} handleDelete={this.handleDelete} />
-      </div>
+      </Custdiv>
       );
     }
   
@@ -78,15 +125,43 @@ class TodoList extends React.Component {
         
     }
   }
-  
+
+  const Listdiv = styled.div`
+    font-family: sans-serif;
+    font-size: 1.3rem;
+
+    color: black;
+    border: none;
+
+    font-size: 1.5rem;
+
+
+    .test {
+      width: 300px;
+      &:hover {
+        text-decoration: underline;
+        
+    }
+    }
+`;
+
+
+
+
   class List extends React.Component {
+
+
+
+
     render() {
       return (
-        <ul>
+        <Listdiv>
+        <ul >
           {this.props.items.map(item => (
-            <li key={item.id} onClick={() => this.props.handleDelete(item)}>{item.text}</li>
+            <li className = "test" key={item.id} onClick={() => this.props.handleDelete(item)}>{item.text}</li>
           ))}
         </ul>
+        </Listdiv>
       );
     }
   }

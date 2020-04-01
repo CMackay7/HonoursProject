@@ -9,10 +9,21 @@ import BallotEdditRanked from "./ranked_ballot_add";
 import BallotEdditScore from "./score_ballot_add";
 import RankedPage from "./rankedBallotPage";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import Nav from './Nav';
+//import Nav from './NavigationBar';
 import CandidateToWin from "./candidate_to_win";
 import PluralityButton from "./send_api_buttin";
+import { Jumbotron } from './components/Jumbotron_Plurality';
+import { Layout } from './components/Layout';
+import styled from 'styled-components'
 import './App.css';
+
+const NiceButton = styled.button`
+  border-radius: 5px;
+
+  border: 0.5px solid black;
+  `;
+
+
 
 class NormalPage extends React.Component{
 
@@ -34,17 +45,19 @@ class NormalPage extends React.Component{
     return (
       <div>
 
-        <h3>Plurality</h3>
-        
+        <Jumbotron/>
+          <Layout>
           <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
           <CandidateToWin set_candidate_to_win = {this.set_candidate_to_win} candidates={this.state.items}/>
+          <h3>Ballots</h3>
           <BallotEddit candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
-          <h3>Ballsadots</h3>
+          
           <BallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
-          <button onClick={() => this.populate_similarities()}> add similarities</button>
+          <NiceButton onClick={() => this.populate_similarities()}> add similarities</NiceButton>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
           <PluralityButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable} similarities={this.state.similarities}
            candidatetowin={this.state.candidateToWin}/>
+          </Layout>
         </div>
 
      

@@ -10,6 +10,8 @@ import BallotEdditScore from "./score_ballot_add";
 import RankedBallotList from "./ranked_ballot_list";
 import CandidateToWin from "./candidate_to_win";
 import RankedButton from "./send_api_button_ranked";
+import { JumbotronRanked } from './components/Jumbotron_Ranked';
+import { Layout } from './components/Layout';
 import './App.css';
 
 class RankedPage extends React.Component{
@@ -31,7 +33,8 @@ class RankedPage extends React.Component{
   render(){
     return (
       <div>
-        <h3>Ranked</h3>
+        <JumbotronRanked/>
+        <Layout>
         <CandidateToWin set_candidate_to_win = {this.set_candidate_to_win} candidates={this.state.items} />
           <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
           <BallotEdditRanked candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
@@ -40,6 +43,7 @@ class RankedPage extends React.Component{
           <button onClick={() => this.populate_similarities()}> add similarities</button>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
           <RankedButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable}  candidatetowin={this.state.candidateToWin} similarities={this.state.similarities}/>
+          </Layout>
         </div>
 
      

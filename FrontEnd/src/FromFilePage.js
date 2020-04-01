@@ -1,6 +1,22 @@
 import React from 'react';
 import history from './history';
 import {Link} from 'react-router-dom'
+import styled from 'styled-components'
+import { JumbotronFromFile } from './components/Jumbotron_From_file';
+import { Layout } from './components/Layout';
+
+const Button = styled.button`
+    font-family: sans-serif;
+    font-size: 1.3rem;
+    background: #405CC6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+
+    &:hover {
+        background: #6D6968;
+    }
+`;
 
 
 class FromFilePage extends React.Component{
@@ -22,10 +38,12 @@ class FromFilePage extends React.Component{
     render() {  
         return(        
             <nav>
-                <h3>Logo</h3>
+                <JumbotronFromFile/>
+                <Layout>
                 <input id="input" placeholder="Enter the filename" type="file" onChange={() => this.onChangeHandler()}></input>
                 <div>{this.state.data}</div>
-                <button disabled={!this.state.data} onClick={() => this.sendapi()}>Run Election</button>
+                <Button disabled={!this.state.data} onClick={() => this.sendapi()}>Run Election</Button>
+                </Layout>
             </nav>
         );
     }

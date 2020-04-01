@@ -5,6 +5,18 @@ import {Link, useHistory} from 'react-router-dom'
 import history from './history';
 import { saveAs } from 'file-saver';
 import NameFile from './name_file';
+import styled from 'styled-components'
+
+const StyledDiv = styled.div`
+    margin-top: 2%;
+    .runButton{
+        border-radius: 5px;
+        padding: 2px;
+        border: 0.5px solid black;
+        margin-right: 3%;
+    }
+
+`;
 
 class PluralityButton extends React.Component{
 
@@ -17,15 +29,13 @@ class PluralityButton extends React.Component{
     
     render(){
         return(
-            <div>
-                <h3>
-                    testfjdvnkfjnv
-                    </h3>
-                <button onClick={() =>  this.create_json_string(true)}> Run Election </button>
+            <StyledDiv>
+
+                <button className= "runButton" onClick={() =>  this.create_json_string(true)}> Run Election </button>
                 <NameFile save={this.downloadFile}/>
                 
                 
-            </div>
+            </StyledDiv>
         )
     }
 

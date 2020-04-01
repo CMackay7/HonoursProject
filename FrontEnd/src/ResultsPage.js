@@ -2,9 +2,10 @@ import React from 'react';
 // import logo from './logo.svg';
 import RankedPage from "./rankedBallotPage";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-import Nav from './Nav';
+//import Nav from './NavigationBar';
 import NormalPage from './NormalBallotPage';
 import VoteResultsDisplay from './VoteResultsDisplay';
+import { JumbotronResults } from './components/Jumbotron_Results';
 import './App.css';
 
 class ResultsPage extends React.Component{
@@ -40,6 +41,7 @@ if (this.state.datarecieved) {
   render(){
     return(
       <div>
+        <JumbotronResults/>
         <VoteResultsDisplay json={this.state.votingsystems} />
       </div>
     )

@@ -1,5 +1,24 @@
 import React from "react";
+import styled from 'styled-components'
 
+const StyledDiv = styled.div`
+  .invisbutton{
+    border:none;
+    background: white;
+    margin-top:10px;
+  }
+
+  ion-icon{
+    font-size: 32px;
+    
+    color: #c41313;
+  }
+
+  .customli{
+    width: 300px;
+    font-size: 1.5rem;
+  }
+`;
 
 class BallotList extends React.Component {
 
@@ -11,12 +30,16 @@ class BallotList extends React.Component {
 
     render(){
         return(
+          <StyledDiv>
             <ul>
             {this.props.ballots.map(item => (
-              <li key={item.id} >{item.candidate} = {item.votes}
-              <button onClick={() => this.deleteBallot(item.candidate)}>delete</button></li>
+              <li className="customli" key={item.id} >{item.candidate} = {item.votes}
+              <button className="invisbutton" onClick={() => this.deleteBallot(item.candidate)}>
+              <ion-icon name="close-outline" ></ion-icon>
+              </button></li>
             ))}
           </ul>
+          </StyledDiv>
         )
     }
 

@@ -2,7 +2,21 @@ import React from "react";
 import { Accordion, AccordionItem } from 'react-light-accordion';
 import 'react-light-accordion/demo/css/index.css';
 import SimilarPopup from "./similaritiespopup";
+import styled from 'styled-components'
 
+
+const CustomLi = styled.li`
+
+
+  width: 300px;
+  &:hover {
+    text-decoration: underline;
+    
+}
+`;
+
+
+ 
 class EdditSimilarities extends React.Component {
 
     constructor(props){
@@ -49,8 +63,8 @@ class EdditSimilarities extends React.Component {
                 
                 var keytoadd = (candidatefrom+"/"+innercand)
                 ///;
-                outlist = outlist.concat(<li key={keytoadd} update_similarities={this.props.update_similarities} id={keytoadd} value="bob" >{candidatefrom} => {innercand}: {next_loop[innercand]} 
-                <SimilarPopup handleUpdate={this.handleUpdate} value={keytoadd}/> </li>);
+                outlist = outlist.concat(<CustomLi key={keytoadd} update_similarities={this.props.update_similarities} id={keytoadd} value="bob" >{candidatefrom} => {innercand}: {next_loop[innercand]} 
+                <SimilarPopup handleUpdate={this.handleUpdate} value={keytoadd}/> </CustomLi>);
                // console.log(outlist);
             }
 //<button value = {keytoadd} onClick={e => <SimilarPopup/>}>asdasd</button>

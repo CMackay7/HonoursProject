@@ -10,6 +10,8 @@ import BallotEdditScore from "./score_ballot_add";
 import ScoreBallotList from "./Score_ballot_list";
 import CandidateToWin from "./candidate_to_win";
 import ScoreButton from "./send_api_button_score";
+import { JumbotronScore } from "./components/Jumbotron_Score";
+import { Layout } from "./components/Layout";
 import './App.css';
 
 class ScorePage extends React.Component{
@@ -31,7 +33,8 @@ class ScorePage extends React.Component{
   render(){
     return (
       <div>
-        <h3>Score</h3>
+        <JumbotronScore/>
+        <Layout>
         <CandidateToWin set_candidate_to_win = {this.set_candidate_to_win} candidates={this.state.items} />
           <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
           <BallotEdditScore candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
@@ -40,6 +43,7 @@ class ScorePage extends React.Component{
           <button onClick={() => this.populate_similarities()}> add similarities</button>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
           <ScoreButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable}  candidatetowin={this.state.candidateToWin} similarities={this.state.similarities}/>
+          </Layout>
         </div>
 
      

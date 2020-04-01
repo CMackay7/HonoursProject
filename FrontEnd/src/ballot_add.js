@@ -1,5 +1,43 @@
 import React from "react";
 import Popup from "reactjs-popup";
+import styled from 'styled-components'
+
+const Customselected = styled.div`
+    .customselect{
+        padding: 5px;
+        border-radius: 5px;
+        border: 0.5px solid black
+    }
+
+    .customInput{
+        
+        margin-top: 5px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+        border: 0.5px solid black;
+    }
+
+    .customButton{
+        border-radius: 5px;
+        float: left;
+        border: 0.5px solid black;
+    }
+
+    .customPopup{
+        background: blue;
+    }
+
+
+`;
+
+const Ballotaddbutton = styled.button`
+        border-radius: 5px;
+
+        border: 0.5px solid black;
+        padding: 5px;
+
+`;
+
 
 class BallotEddit extends React.Component {
 
@@ -12,22 +50,22 @@ class BallotEddit extends React.Component {
 
     render() {
         return(
-        <Popup trigger={<button>Add Ballot</button>} position="top left">
+        <Popup trigger={<Ballotaddbutton>Add Ballot</Ballotaddbutton>} position="top left">
             {close => (
-            <div>
-                <select id="candidateSelect" onChange={this.onSelectCandidate}>
+            <Customselected>
+                <select className="customselect" id="candidateSelect" onChange={this.onSelectCandidate}>
                     <option disabled selected value> -- select an option -- </option>
                     {this.props.candidates.map(item => (
                         <option key={item.id}>{item.text}</option>
                     ))}
                     
                 </select>
-                <input type="number" id="candidateVotes" onChange={this.onNumberChange} value={this.state.votes}></input>
-                <button onClick={() => this.add_ballot()} disabled={!this.state.candidate}>Add ballot</button>
+                <input className="customInput" type="number" id="candidateVotes" onChange={this.onNumberChange} value={this.state.votes}></input>
+                <button className="customButton" onClick={() => this.add_ballot()} disabled={!this.state.candidate}>Add ballot</button>
                 <a className="close" onClick={close}>
                 &times;
                 </a>
-            </div>
+            </Customselected>
             )}
         </Popup>
         )
