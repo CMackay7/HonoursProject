@@ -1,4 +1,4 @@
-from .RankedVote import RankedVote
+from RankedVote import RankedVote
 class ScoreVoteRunner:
 
     def __init__(self, score_vote, addremove_boolean):

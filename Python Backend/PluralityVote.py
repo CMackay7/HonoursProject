@@ -1,4 +1,4 @@
-from .Vote import Vote
+from Vote import Vote
 from collections import defaultdict
 
 class PluralityVote(Vote):

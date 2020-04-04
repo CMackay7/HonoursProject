@@ -13,7 +13,19 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import NormalPage from './NormalBallotPage';
 import { Accordion, AccordionItem } from 'react-light-accordion';
 import ScorePage from './ScoreBallotPage';
+import styled from 'styled-components'
 import './App.css';
+
+const Custom_button = styled.button`
+  border: none;
+  color: blue;
+  background: white;
+
+  &:hover {
+        text-decoration: underline;
+        
+    }
+`;
 
 class VoteResultsDisplay extends React.Component{
 
@@ -22,8 +34,10 @@ class VoteResultsDisplay extends React.Component{
     // var json = this.props.json
     // alert(json.length)
     this.createList = this.createList.bind(this)
+
     var votes_dict =  this.delare_vote_dictionary()
-    this.state = {vote_code: votes_dict};
+    var url_dict = this.delare_vote_url()
+    this.state = {vote_code: votes_dict, url_code: url_dict};
   }
 
   render(){
@@ -42,7 +56,11 @@ class VoteResultsDisplay extends React.Component{
               pannel
             ))}
           </Accordion>
-        </div>
+
+          </div>
+
+
+
       );
     }
   }
@@ -56,6 +74,8 @@ class VoteResultsDisplay extends React.Component{
             </Accordion>
   */
 
+
+
   createList(){
     var returnaccordion = []
     var currdict = []
@@ -68,6 +88,11 @@ class VoteResultsDisplay extends React.Component{
       var curr_system = keys[i];
       var translated_system = this.state.vote_code[curr_system]; 
       var edditdata = json[curr_system]
+      var url_translated = this.state.url_code[curr_system];
+      //alert(url_translated);
+      //var url_to_use = "http://localhost:3000/" + {url_translated};
+      console.log(url_translated);
+      console.log(url_translated);
       var candidates_changed = Object.keys(edditdata)
       if (candidates_changed.length > 0){
 
@@ -77,6 +102,7 @@ class VoteResultsDisplay extends React.Component{
       } else {
         returnaccordion = returnaccordion.concat((<AccordionItem title={translated_system}>
           <p> your selected candidate won in {translated_system}  </p>
+          <ButtonForUse url={url_translated}/>
           </AccordionItem>)) ;
       }
 
@@ -144,7 +170,40 @@ class VoteResultsDisplay extends React.Component{
     return dictionary_to_return;
   } 
 
+  delare_vote_url(){
+    var dictionary_to_return = {}
+    dictionary_to_return["IRN"] = "instant_run_off";
+    dictionary_to_return["AVP"] = "alternative_vote_plus";
+    dictionary_to_return["BC"] = 'borda_count';
+    dictionary_to_return["CPLN"] = "copeland_method";
+    dictionary_to_return["MNX"] = "min_max_method";
+    dictionary_to_return["RP"] = "ranked_pairs";
+    dictionary_to_return["fptp"] = "first_past_the_post";
+    dictionary_to_return["SMV"] = "sum_vote";
+    dictionary_to_return["MNV"] = "mean_vote";
+    dictionary_to_return["STR"] = "star_vote";
 
+    return dictionary_to_return;
+  } 
+
+
+}
+
+class ButtonForUse extends React.Component{
+  render(){
+    return(
+      <Custom_button onClick={() => this.OpenNewTab("http://localhost:3000/" +this.props.url)}>do something</Custom_button> 
+    );
+  }
+  
+
+  OpenNewTab(UrlToOpen) {
+
+
+    window.open(
+      UrlToOpen, "_blank"
+    );
+  }
 
 }
 export default VoteResultsDisplay;

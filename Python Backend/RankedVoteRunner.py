@@ -1,4 +1,4 @@
-from .RankedVote import RankedVote
+from RankedVote import RankedVote
 import operator
 
 class RankedVoteRunner:
@@ -259,7 +259,7 @@ class RankedVoteRunner:
         updates = {"nil": "nil"}
         json = {"MNX": updates}
         breakdown = self.ranked_vote.minmax_method()
-        winner = max(breakdown, key=breakdown.get)
+        winner = min(breakdown, key=breakdown.get)
 
         return winner
 
@@ -286,7 +286,7 @@ class RankedVoteRunner:
                 self.ranked_vote.remove_candidate(remove)
                 updates[remove] = "removed"
                 breakdown = self.ranked_vote.minmax_method()
-                winner = max(breakdown, key=breakdown.get)
+                winner = min(breakdown, key=breakdown.get)
                 if winner == self.ranked_vote.candidateToWin:
                     json["MNX"] = updates
                     return winner, json
