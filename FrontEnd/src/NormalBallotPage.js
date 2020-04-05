@@ -18,9 +18,11 @@ import styled from 'styled-components'
 import './App.css';
 
 const NiceButton = styled.button`
-  border-radius: 5px;
 
-  border: 0.5px solid black;
+border-radius: 5px;
+    border: 0.5px solid black; 
+    height: 40px;
+    width: 120px;
   `;
 
 
@@ -47,11 +49,10 @@ class NormalPage extends React.Component{
 
         <Jumbotron/>
           <Layout>
-          <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
           <CandidateToWin set_candidate_to_win = {this.set_candidate_to_win} candidates={this.state.items}/>
-          <h3>Ballots</h3>
+          <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
           <BallotEddit candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
-          
+          <h3>Ballots</h3>
           <BallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
           <NiceButton onClick={() => this.populate_similarities()}> add similarities</NiceButton>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>

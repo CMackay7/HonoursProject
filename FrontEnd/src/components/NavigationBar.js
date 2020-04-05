@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 const Styles = styled.div`
     .nav {
-        background-color: #6D6968;
+        background-color: #4E4D4D;
         padding: 10px;
     }
 

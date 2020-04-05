@@ -1,5 +1,35 @@
 import React from "react";
+import styled from 'styled-components'
 
+const StyledDiv = styled.div`
+  .invisbutton{
+    border:none;
+    background: white;
+    
+    height:15px;
+  }
+
+  ion-icon{
+    font-size: 32px;
+    
+    color: #c41313;
+  }
+
+  .customli{
+    width: 300px;
+    position:relative;
+
+    font-size: 1.5rem;
+  }
+
+  .customp{
+    font-size: 1rem;
+    &:hover {
+        text-decoration: underline;
+        
+    }
+  }
+`;
 
 class RankedBallotList extends React.Component {
 
@@ -16,13 +46,17 @@ class RankedBallotList extends React.Component {
         console.log("rsgkjvdfn")
         console.log(display_string)
         return(
+            <StyledDiv>
             <ul>
             {display_string.map(item => (
-                <li key = {item.place}> {item.displaystring}
-                <button onClick={() => this.deleteBallot(item.place, display_string)}>delete</button>
+                <li className="customli" key = {item.place}> {item.displaystring}
+                <button className="invisbutton" onClick={() => this.deleteBallot(item.place, display_string)}>
+                    <p className="customp">Delete</p>
+                    </button>
                 </li>
             ))}
           </ul>
+          </StyledDiv>
         )
     }
 

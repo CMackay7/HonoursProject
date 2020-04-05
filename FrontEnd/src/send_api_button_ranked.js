@@ -6,6 +6,7 @@ import './App.css';
 import styled from 'styled-components'
 
 const CustomButton = styled.button`
+    margin-top: 10px;
     border-radius: 5px;
     padding: 2px;
     border: 0.5px solid black;

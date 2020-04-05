@@ -8,7 +8,7 @@ import NameFile from './name_file';
 import styled from 'styled-components'
 
 const StyledDiv = styled.div`
-    margin-top: 2%;
+    margin-top: 10px;
     .runButton{
         border-radius: 5px;
         padding: 2px;

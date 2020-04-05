@@ -3,6 +3,16 @@ import React from 'react';
 import './App.css';
 import history from './history';
 import NameFile from './name_file'
+import styled from 'styled-components'
+
+const CustomButton = styled.button`
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 2px;
+    border: 0.5px solid black;
+    margin-right: 3%;
+
+`;
 
 class ScoreButton extends React.Component{
 
@@ -15,7 +25,7 @@ class ScoreButton extends React.Component{
     render(){
         return(
             <div>
-                <button onClick={() =>  this.create_json_string(true)}> Run Election </button>
+                <CustomButton onClick={() =>  this.create_json_string(true)}> Run Election </CustomButton>
                 <NameFile save={this.downloadFile}/>
             </div>
         )

@@ -13,6 +13,16 @@ import ScoreButton from "./send_api_button_score";
 import { JumbotronScore } from "./components/Jumbotron_Score";
 import { Layout } from "./components/Layout";
 import './App.css';
+import styled from 'styled-components'
+
+const Custombutton = styled.button`
+
+
+    border-radius: 5px;
+    border: 0.5px solid black; 
+    height: 40px;
+    width: 120px;
+`;
 
 class ScorePage extends React.Component{
 
@@ -40,7 +50,7 @@ class ScorePage extends React.Component{
           <BallotEdditScore candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
           <h3>Ballots</h3>
           <ScoreBallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
-          <button onClick={() => this.populate_similarities()}> add similarities</button>
+          <Custombutton onClick={() => this.populate_similarities()}> add similarities</Custombutton>
           <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
           <ScoreButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable}  candidatetowin={this.state.candidateToWin} similarities={this.state.similarities}/>
           </Layout>

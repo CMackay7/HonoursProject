@@ -1,5 +1,35 @@
-import React from "react";
+import React from "react"
+import styled from 'styled-components'
 
+const StyledDiv = styled.div`
+  .invisbutton{
+    border:none;
+    background: white;
+    
+    height:15px;
+  }
+
+  ion-icon{
+    font-size: 32px;
+    
+    color: #c41313;
+  }
+
+  .customli{
+    width: 300px;
+    position:relative;
+
+    font-size: 1.5rem;
+  }
+
+  .customp{
+    font-size: 1rem;
+    &:hover {
+        text-decoration: underline;
+        
+    }
+  }
+`;
 
 class ScoreBallotList extends React.Component {
 
@@ -14,19 +44,23 @@ class ScoreBallotList extends React.Component {
     render(){
         const display_string = this.ballot_to_string();
         return(
+            <StyledDiv>
             <ul>
             {display_string.map(item => (
-                <li key = {item.place}> {item.displaystring}
-                <button onClick={() => this.deleteBallot(item.place)}>delete</button>
+                <li className="customli" key = {item.place}> {item.displaystring}
+                <button className="invisbutton" onClick={() => this.deleteBallot(item.place, display_string)}>
+                    <p className="customp">delete</p>
+                </button>
                 </li>
             ))}
           </ul>
+          </StyledDiv>
         )
     }
 
-    deleteBallot(id){
+    deleteBallot(id, display_string){
         var place = 0
-        for(var i = 0; i < this.props.ballots; i++){
+        for(var i = 0; i < display_string.length; i++){
             if(this.props.ballots[i].id === id){
                 place = i;
                 break;

@@ -1,5 +1,61 @@
 import React from "react";
 import Popup from "reactjs-popup";
+import styled from 'styled-components'
+
+const StyledPopup = styled.div`
+
+
+    .styledSelect {
+        width: 60%;
+    
+    }
+
+    .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.customul {
+
+    list-style-type: none;
+    font-size: 1.5rem;
+    
+}
+
+    .selectbuttondiv{
+        padding: 5px;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+    .custombutton{
+        background: white;
+        border: none;
+        height: 20px;
+        
+    }
+`;
+
+const Custombutton = styled.button`
+
+    border-radius: 5px;
+    border: 0.5px solid black; 
+    height: 40px;
+    width: 100px;
+
+`;
+
+
+
 
 class BallotEdditRanked extends React.Component {
     constructor(props){
@@ -13,38 +69,46 @@ class BallotEdditRanked extends React.Component {
         this.complete_ballot = this.complete_ballot.bind(this);
     }
 
+    
+
     render(){
 
         var select_values = this.generate_list();
         return(
-            <Popup trigger={<button>Add Ballot</button>} position="top left">
+            <Popup trigger={<Custombutton>Add Ballot</Custombutton>} modal>
             {close => (
 
-            <div>
+            <StyledPopup>
                 <div>
-                    <ul>
+                    <ul className="customul">
                         {this.state.ballot.map(ball => (
                             <li key={ball.id}>{ball.rank}: {ball.candidate}</li>
                         ))}
                     </ul>
                 </div>
-                <h3>{this.state.rank}
-                <select id="candidateSelect" onChange={this.onSelectCandidate}>
-                    
-                    <option disabled selected value={1}> -- select an option -- </option>
-                    {select_values.map(item => (
-                        <option key={item.id}>{item.text}</option>
-                    ))}
-                    
-                </select>
-                <button onClick={() => this.add_candidate()}>add</button>
+                <h3>{this.state.rank}.
+                <div className="selectbuttondiv" >
+                    <select className="styledSelect" id="candidateSelect" onChange={this.onSelectCandidate}>
+                        
+                        <option disabled selected value={1}> -- select an option -- </option>
+                        {select_values.map(item => (
+                            <option key={item.id}>{item.text}</option>
+                        ))}
+                         
+                    </select>
+                    <button className="custombutton" onClick={() => this.add_candidate()}>
+                    <ion-icon  name="add-outline" size="large"></ion-icon>
+                    </button>
+                </div>
                 </h3>
+                <div className="selectbuttondiv">
                 <input type="number" id="candidateVotes" onChange={this.onNumberChange} value={this.state.votes}></input>
                 <button onClick={() => this.complete_ballot()} >Add ballot</button>
+                </div>
                 <a className="close" onClick={close}>
                 &times;
                 </a>
-            </div>
+            </StyledPopup>
             )}
         </Popup>
         )
@@ -103,7 +167,7 @@ class BallotEdditRanked extends React.Component {
     }
 
     complete_ballot(){
-        if(this.state.votes === ""){
+        if((this.state.votes === "") || (this.state.ballot === [])){
             return;
         }
         

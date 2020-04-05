@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
+import { Layout } from './Layout'
 
 class MinMaxMethod extends React.Component {
     render() {

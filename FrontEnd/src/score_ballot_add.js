@@ -1,5 +1,65 @@
 import React from "react";
 import Popup from "reactjs-popup";
+import styled from 'styled-components'
+
+const Custombutton = styled.button`
+
+    border-radius: 5px;
+    border: 0.5px solid black; 
+    height: 40px;
+    width: 100px;
+
+`;
+
+const StyledPopup = styled.div`
+
+
+    .styledSelect {
+        width: 60%;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .close {
+  cursor: pointer;
+  position: absolute;
+  display: block;
+  padding: 2px 5px;
+  line-height: 20px;
+  right: -10px;
+  top: -10px;
+  font-size: 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #cfcece;
+}
+
+.customul {
+
+    margin-top: 5px;
+    font-size: 1.5rem;
+    
+}
+
+    .selectbuttondiv{
+        padding: 5px;
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+    
+    .custombuttoncandidate{
+        border-radius: 5px;
+        border: 0.5px solid black;    
+    }
+
+    .custombutton{
+        border-radius: 5px;
+        margin-left: 10px;
+        border: 0.5px solid black;
+        
+    }
+`;
 
 class BallotEdditScore extends React.Component {
     constructor(props){
@@ -18,19 +78,20 @@ class BallotEdditScore extends React.Component {
 
         var select_values = this.generate_list();
         return(
-            <Popup trigger={<button>Add Ballot</button>} position="top left">
+            <Popup trigger={<Custombutton>Add Ballot</Custombutton>} modal>
             {close => (
 
-            <div>
+            <StyledPopup>
                 <div>
-                    <ul>
+                    <ul className="customul">
                         {this.state.ballot.map(ball => (
                             <li key={ball.id}>{ball.candidate}: {ball.score}</li>
                         ))}
                     </ul>
                 </div>
                 <h3>{this.state.rank}
-                <select id="candidateSelect" onChange={this.onSelectCandidate}>
+                <div>
+                <select className="styledSelect" id="candidateSelect" onChange={this.onSelectCandidate}>
                     
                     <option disabled selected value={1}> -- select a candidate -- </option>
                     {select_values.map(item => (
@@ -38,7 +99,9 @@ class BallotEdditScore extends React.Component {
                     ))}
                     
                 </select>
-                <select id="rankSelect" onChange={this.onSelectRank}>
+                </div>
+                <div>
+                <select className="styledSelect" id="rankSelect" onChange={this.onSelectRank}>
                     <option disabled selected value={0}> -- select a score -- </option>
                     <option key={1}>1</option>
                     <option key={2}>2</option>
@@ -46,14 +109,15 @@ class BallotEdditScore extends React.Component {
                     <option key={4}>4</option>
                     <option key={5}>5</option>
                 </select>
-                <button onClick={() => this.add_candidate()}>add</button>
+                </div>
+                <button className="custombuttoncandidate" onClick={() => this.add_candidate()}>add</button>
                 </h3>
                 <input type="number" id="candidateVotes" onChange={this.onNumberChange} value={this.state.votes}></input>
-                <button onClick={() => this.complete_ballot()} >Add ballot</button>
+                <button className="custombutton" disabled={!this.state.ballot} onClick={() => this.complete_ballot()} >Add ballot</button>
                 <a className="close" onClick={close}>
                 &times;
                 </a>
-            </div>
+            </StyledPopup>
             )}
         </Popup>
         )
@@ -126,7 +190,7 @@ class BallotEdditScore extends React.Component {
     }
 
     complete_ballot(){
-        if(this.state.votes === ""){
+        if((this.state.votes === "" ) || (this.state.ballot === [])){
             return;
         }
 
