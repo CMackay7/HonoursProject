@@ -12,6 +12,7 @@
     "react-bootstrap": "^1.0.0",
     "react-collapsible": "^2.7.0",
     "react-dom": "^16.12.0",
+    "react-json-pretty": "^2.2.0",
     "react-light-accordion": "^0.1.4",
     "react-responsive-accordion": "^1.0.0",
     "react-router": "^5.1.2",

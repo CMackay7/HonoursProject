@@ -14,6 +14,7 @@ import NormalPage from './NormalBallotPage';
 import { Accordion, AccordionItem } from 'react-light-accordion';
 import ScorePage from './ScoreBallotPage';
 import styled from 'styled-components'
+import Popup from "reactjs-popup";
 import './App.css';
 
 const Custom_button = styled.button`
@@ -27,43 +28,38 @@ const Custom_button = styled.button`
     }
 `;
 
-class VoteResultsDisplay extends React.Component{
+class documenttodownload extends React.Component{
 
   constructor(props) {
     super(props);
     // var json = this.props.json
     // alert(json.length)
     this.createList = this.createList.bind(this)
-
+    this.onNumberChange = this.onNumberChange.bind(this)
     var votes_dict =  this.delare_vote_dictionary()
     var url_dict = this.delare_vote_url()
-    this.state = {vote_code: votes_dict, url_code: url_dict};
+    this.state = {vote_code: votes_dict, url_code: url_dict, filename: ""};
   }
 
-  render(){
-    const displayList = this.createList();
-    if (displayList.length === 0){
-      return(
-        <div>
-          Your chosen candidate did not win in any voting system
-        </div>
-      );
-    } else {
-    return (
-        <div>
-          <Accordion atomic={true}>
-            {displayList.map(pannel => (
-              pannel
-            ))}
-          </Accordion>
+    render() {
+        return(
+        <Popup trigger={<button>Download File</button>} position="top left">
+            {close => (
+            <div>
+                <input id="candidateVotes" placeholder="Enter the filename" onChange={this.onNumberChange} value={this.state.filename}></input>
+                <button onClick={() => this.createList()} disabled={!this.state.filename}>Save</button>
 
-          </div>
-
-
-
-      );
+            </div>
+            )}
+        </Popup>
+        )
     }
-  }
+
+    onNumberChange(e) {
+        this.setState({ filename: e.target.value });
+    }
+    
+
 
 
   /*
@@ -80,35 +76,31 @@ class VoteResultsDisplay extends React.Component{
     var returnaccordion = []
     var currdict = []
     var json = this.props.json;
+    console.log("adsjakfjsd")
+    console.log(json)
     var keys = Object.keys(json);
     var jsonlength = Object.keys(json).length;
     console.log(json)
-
+    var documenttodownload = "";
     for(var i = 0; i < jsonlength; i++){
       var curr_system = keys[i];
       var translated_system = this.state.vote_code[curr_system]; 
       var edditdata = json[curr_system]
-      var url_translated = this.state.url_code[curr_system];
-      //alert(url_translated);
-      //var url_to_use = "http://localhost:3000/" + {url_translated};
-      console.log(url_translated);
-      console.log(url_translated);
+
       var candidates_changed = Object.keys(edditdata)
       if (candidates_changed.length > 0){
+        var extra_string = this.convert_edditing(edditdata, candidates_changed)
+        documenttodownload = documenttodownload + ("your candidate will win in " + translated_system + " " + extra_string + "\n")
 
-        returnaccordion = returnaccordion.concat((<AccordionItem title={translated_system}>
-          <p>your candidate will win {this.convert_edditing(edditdata, candidates_changed)}</p>
-          <ButtonForUse url={url_translated} name={translated_system}/>
-      </AccordionItem>)) ;
       } else {
-        returnaccordion = returnaccordion.concat((<AccordionItem title={translated_system}>
-          <p> your selected candidate won in {translated_system}  </p>
-          <ButtonForUse url={url_translated} name={translated_system}/>
-          </AccordionItem>)) ;
+        documenttodownload = documenttodownload + ("your selected candidate won in " + translated_system + "\n")  
+
+
       }
-
-
     }
+    var FileSaver = require('file-saver');
+    var blob = new Blob([documenttodownload], {type: "text/plain;charset=utf-8"});
+    FileSaver.saveAs(blob, this.state.filename);
     return returnaccordion;
   }
 
@@ -159,7 +151,7 @@ class VoteResultsDisplay extends React.Component{
         returnstring = returnstring + removedstring + " is removed from the ballot."
       }
     }
-    console.log(removedstring);
+    //console.log(removedstring);
     return returnstring;
 
   }
@@ -201,21 +193,5 @@ class VoteResultsDisplay extends React.Component{
 
 }
 
-class ButtonForUse extends React.Component{
-  render(){
-    return(
-    <Custom_button onClick={() => this.OpenNewTab("http://localhost:3000/" +this.props.url)}>Find out more about {this.props.name}</Custom_button> 
-    );
-  }
-  
 
-  OpenNewTab(UrlToOpen) {
-
-
-    window.open(
-      UrlToOpen, "_blank"
-    );
-  }
-
-}
-export default VoteResultsDisplay;
+export default documenttodownload;

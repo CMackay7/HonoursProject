@@ -352,7 +352,10 @@ class RankedVote(Vote):
         for perm in combinations(self.valid_candidates_copy, 2):
             result = self.pairwise_comparison(perm[0], perm[1])
             if not result[perm[0]] == result[perm[1]]:
-                connections[(perm[0], perm[1])] = result[perm[0]]
+                if result[perm[0]] < result[perm[1]]:
+                    connections[(perm[1], perm[0])] = result[perm[1]]
+                else:
+                    connections[(perm[0], perm[1])] = result[perm[0]]
 
         connect = sorted(connections, key=connections.get)
         connect.reverse()

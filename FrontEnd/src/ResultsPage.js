@@ -7,6 +7,9 @@ import NormalPage from './NormalBallotPage';
 import VoteResultsDisplay from './VoteResultsDisplay';
 import { JumbotronResults } from './components/Jumbotron_Results';
 import './App.css';
+import JSONPretty from 'react-json-pretty';
+import Documentdownloader from './DoccumentDownloader'
+import { Layout } from './components/Layout'
 
 class ResultsPage extends React.Component{
 
@@ -42,7 +45,13 @@ if (this.state.datarecieved) {
     return(
       <div>
         <JumbotronResults/>
+        <Layout>
+        <h3>Voting Data</h3>
+        <JSONPretty id="json-pretty" data={this.state.datasent}></JSONPretty>
+        <h3>Results</h3>
         <VoteResultsDisplay json={this.state.votingsystems} />
+        <Documentdownloader json={this.state.votingsystems}/>
+        </Layout>
       </div>
     )
 

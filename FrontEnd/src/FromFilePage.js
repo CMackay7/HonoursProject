@@ -4,6 +4,8 @@ import {Link} from 'react-router-dom'
 import styled from 'styled-components'
 import { JumbotronFromFile } from './components/Jumbotron_From_file';
 import { Layout } from './components/Layout';
+import JSONPretty from 'react-json-pretty';
+
 
 const Button = styled.button`
     font-family: sans-serif;
@@ -24,7 +26,8 @@ class FromFilePage extends React.Component{
         super(props);
           this.state = {
             selectedFile: null,
-            data: ""
+            data: "",
+            displayData: ""
           }
        
           this.onChangeHandler = this.onChangeHandler.bind(this);
@@ -41,7 +44,7 @@ class FromFilePage extends React.Component{
                 <JumbotronFromFile/>
                 <Layout>
                 <input id="input" placeholder="Enter the filename" type="file" onChange={() => this.onChangeHandler()}></input>
-                <div>{this.state.data}</div>
+                <JSONPretty id="json-pretty" data={this.state.displayData}></JSONPretty>
                 <Button disabled={!this.state.data} onClick={() => this.sendapi()}>Run Election</Button>
                 </Layout>
             </nav>
@@ -67,8 +70,12 @@ class FromFilePage extends React.Component{
     onChangeHandler(){
         var file = document.getElementById('input').files[0];
         console.log(file);
-        var someshit = "";
-        this.readfiles(file, function(datain){this.setState(state => ({
+        
+        this.readfiles(file, function(datain){
+            var objects = datain.split("|");
+
+            this.setState(state => ({
+            displayData: objects[1],
             data: datain,
       }));}.bind(this));
         console.log(this.state.data)
