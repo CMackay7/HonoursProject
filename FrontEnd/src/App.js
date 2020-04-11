@@ -39,8 +39,8 @@ class App extends React.Component{
           
           <Switch>
             <Route path="/" exact component ={NormalPage} />
-            <Route path="/ranked" component={RankedPage}/>
-            <Route path="/score" component={ScorePage}/>
+            <Route path="/ranked_vote" component={RankedPage}/>
+            <Route path="/score_vote" component={ScorePage}/>
             <Route path="/results" component={ResultsPage}/>
             <Route path="/from_file" component={FromFilePage}/>
             <Route path="/first_past_the_post" component={FirstPastThePost}/>

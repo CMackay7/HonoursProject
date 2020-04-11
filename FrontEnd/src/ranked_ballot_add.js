@@ -167,7 +167,7 @@ class BallotEdditRanked extends React.Component {
     }
 
     complete_ballot(){
-        if((this.state.votes === "") || (this.state.ballot === [])){
+        if((this.state.votes === "") || (this.state.ballot.length === 0)){
             return;
         }
         

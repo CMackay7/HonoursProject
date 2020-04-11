@@ -40,6 +40,7 @@ class Graph:
                     return new_path
         return None
 
+
     def is_cycle_util(self, v, visited, rec_stack):
         visited.append(v)
         rec_stack.append(v)
@@ -54,6 +55,7 @@ class Graph:
         rec_stack.remove(v)  # rec_stack = False
         return False
 
+    # Method returns true is there is a cycle in the graph (false if not)
     def isCyclic(self):
         visited = []
         rec_stack = []
@@ -64,8 +66,9 @@ class Graph:
                     return True
             return False
 
-
+    # This method returns the source of the graph
     def find_source(self):
+        # Declare a dictionary
         source_dict = defaultdict(int)
         for key in self._graph:
             source_dict[key] = 0
@@ -73,6 +76,7 @@ class Graph:
             for vertex in self._graph[key]:
                 source_dict[vertex] += 1
 
+        # If a node has no directed connections flowing in then it is the source of the graph
         return_val = ""
         for key in source_dict:
             if source_dict[key] == 0:

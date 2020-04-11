@@ -5,6 +5,8 @@ import RankedBallot
 from itertools import combinations
 import Graph
 
+# This class contains all the code for running ranked votes
+
 class RankedVote(Vote):
     # Candidates is the only one of these which contains the actual objects do not modify or copy
     def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win):
@@ -18,7 +20,9 @@ class RankedVote(Vote):
                 out[vote.candidateRanking[round]] += vote.percentage
         return out
 
-# VOTING METHODS
+###################################################################################################################
+#                                              HELPER FUNCTIONS                                                   #
+###################################################################################################################
 
     # The instant run off method will remove the lowest candidate and distribute their preferences until someone has 50%
     # This process is done one at a time
@@ -70,30 +74,90 @@ class RankedVote(Vote):
         #self.reset()
         return vote
 
+    def copeland_method(self):
+        comparisons = defaultdict(int)
+
+        for perm in combinations(self.valid_candidates, 2):
+            result = self.pairwise_comparison(perm[0], perm[1])
+            if not result[perm[0]] == result[perm[1]]:
+                if result[perm[0]] > result[perm[1]]:
+                    comparisons[perm[0]] += 1
+                    comparisons[perm[1]] -= 1
+                else:
+                    comparisons[perm[1]] += 1
+                    comparisons[perm[0]] -= 1
+        return comparisons
+
+    def minmax_method(self):
+        minmax_store = defaultdict(int)
+        if len(self.valid_candidates_copy) == 1:
+            minmax_store[self.valid_candidates_copy.pop()] = 0
+            return minmax_store
+        for ballot in self.voteBreakdown_copy:
+            for perm in combinations(self.valid_candidates, 2):
+                result = self.pairwise_comparison(perm[0], perm[1])
+
+                # the winner of minmax method is tha candidate that has the best worst showing. so every time there is a pairwise
+                # comparison if the opponenst result is better then their current worst replace it
+                if minmax_store[perm[0]] < result[perm[1]]:
+                    minmax_store[perm[0]] = result[perm[1]]
+                if minmax_store[perm[1]] < result[perm[0]]:
+                    minmax_store[perm[1]] = result[perm[0]]
+
+        return minmax_store
+
+
+    def ranked_pairs(self):
+        connections = defaultdict(int)
+        for perm in combinations(self.valid_candidates_copy, 2):
+            result = self.pairwise_comparison(perm[0], perm[1])
+            if not result[perm[0]] == result[perm[1]]:
+                if result[perm[0]] < result[perm[1]]:
+                    connections[(perm[1], perm[0])] = result[perm[1]]
+                else:
+                    connections[(perm[0], perm[1])] = result[perm[0]]
+
+        connect = sorted(connections, key=connections.get)
+        connect.reverse()
+        g = Graph.Graph([], directed=True)
+        is_cycle = False
+        for vertex in connect:
+            g.add(vertex[0], vertex[1])
+            if g.isCyclic():
+                break
+
+        return g.find_source()
 # END OF VOTING METHODS
 
-    def find_lowest(self, breakdown):
-        secondhighest = (min(breakdown, key=breakdown.get))
-        return secondhighest
+###################################################################################################################
+#                                              HELPER FUNCTIONS                                                   #
+###################################################################################################################
 
-# Got through each ballot and look if first round is valid if not look if second round is valid and so on
+# Go through each ballot and look if first round is valid if not look if second round is valid and so on
 # When it hits the first valid candidate in the ballot it will give all the votes to that candidate
     def distribute_preferences(self, valid_candidates):
         votes = defaultdict(int)
-        counter = 1
         for ballot in self.voteBreakdown_copy:
             ranking = ballot.candidateRanking
             for candidate in range(1, len(ranking) + 1):
+                # Loop through each candidate in the ballot
                 if ranking[candidate] in valid_candidates:
                     votes[ranking[candidate]] += ballot.percentage
                     break
 
         if not len(votes) == len(valid_candidates):
+            # If a candidate is has no votes still add it with 0 votes
             for candidate in valid_candidates:
                 if not candidate in votes:
                     votes[candidate] = 0
         return votes
 
+    # Function that just returns the lowest candidate in a voting breakdown
+    def find_lowest(self, breakdown):
+        secondhighest = (min(breakdown, key=breakdown.get))
+        return secondhighest
+
+    # Helper function to find the two highest candidates
     def find_highest_two(self, breakdown):
         highest = (max(breakdown, key=breakdown.get))
         del breakdown[highest]
@@ -101,16 +165,22 @@ class RankedVote(Vote):
 
         return (highest, secondhighest)
 
+    # This function is used in votes where candidates have to get 50% it check if any candidate does
     def calc_to_fifty(self, breakdown):
         breakdown = self.find_total_percentage(breakdown)
         votes = defaultdict(int)
+        # First calculates a total for each candidate
         for key in breakdown:
             votes[key] += breakdown[key]
+
+        # Next sees if a candidate hits 50%
         for key in votes:
             if votes[key] >= 50:
                 return True
         return False
 
+    # Due to the nature of the borda count voting system it needs a different method to calculate the best candidate
+    # to add
     def find_borda_add(self):
         out = {}
         for candidate_to_add in self.backup_candidates_copy:
@@ -128,8 +198,10 @@ class RankedVote(Vote):
         maximum = max(out, key=out.get)
         return maximum
 
+    # find the best candidate to remove, this is used for evey voting system
     def find_best_remove(self):
         num_of_cands = len(self.valid_candidates_copy)
+        # This avoids a situation where there is only one candidate left
         if num_of_cands == 2:
             return ""
 
@@ -141,24 +213,24 @@ class RankedVote(Vote):
             for cand in ranking:
                 mathsvalue = 0
                 if not ranking[cand] == self.candidateToWin:
+                    # candidates with higher rankings are more preferable to remove from the ballot
+                    # (num_of_cands - cand) ajusts for a higher ranking will be a low number
                     mathsvalue += (num_of_cands - cand) * ballot.percentage
 
                     storenewvals[ranking[cand]] += mathsvalue
         return max(storenewvals, key=storenewvals.get)
 
-    # todo Removed passing the candidate to remove into the function should probably add it back later
 
     # This method will remove a candidate from a ranked vote at the moment you do not need to pass it anything when is
     # is called as it will workout the best candidate to remove wile running
     def remove_candidate(self, candidate_to_remove):
-        #andidate_to_remove = self.find_best_remove()
-       # changeable_vote = copy.deepcopy(self.voteBreakdown_copy)
-        #self.candidates_copy = filter(lambda x: x.CandidateName != candidate_to_remove.CandidateName, self.candidates_copy)
         self.backup_candidates_copy.append(candidate_to_remove)
         for i in range(len(self.voteBreakdown_copy)):
             deleted = False
             ballot = self.voteBreakdown_copy[i]
+
             for cand in ballot.candidateRanking:
+                # Delete the candidate when the correct candidate has been found
                 if ballot.candidateRanking[cand] == candidate_to_remove:
                     deleted = True
                     del self.voteBreakdown_copy[i].candidateRanking[cand]
@@ -166,23 +238,21 @@ class RankedVote(Vote):
 
             if deleted:
                 if len(self.voteBreakdown_copy[i].candidateRanking) == 0:
+                    # If there was only one candidate on the ballot and the ballot is now empty
+                    # assume they will vote for the most similar
                     highest = self.find_candidate(candidate_to_remove).highest(self.candidates)
                     self.voteBreakdown_copy[i].candidateRanking[1] = highest
-                    print("do that shit here boyo")
                 else:
+                    # shift the rankings of all the candidates for other ballots so there is no gaps
                    ranking = self.rejig(self.voteBreakdown_copy[i].candidateRanking)
                    self.voteBreakdown_copy[i].candidateRanking = ranking
 
-        #self.voteBreakdown_copy = changeable_vote
 
 
     def rejig(self, ranking):
         counter = 1
         newranking = {}
         for place in ranking:
-#            if not place == counter:
-#                newranking[counter - 1] = ranking[place]
- #           else:
             newranking[counter] = ranking[place]
 
             counter += 1
@@ -190,19 +260,13 @@ class RankedVote(Vote):
         return newranking
 
     def reset(self):
+        # used to reset the values after running elections
         self.voteBreakdown_copy = copy.deepcopy(self.voteBreakdown)
         self.valid_candidates_copy = copy.deepcopy(self.valid_candidates)
         self.backup_candidates_copy = copy.deepcopy(self.backup_candidates)
 
-
-    # def find_candidate_copy(self, candidatename):
-    #     for candidate in self.candida:
-    #         if candidate.CandidateName == candidatename:
-    #             return candidate
-
-
+    # Add the selected candidate to the ballot
     def add_candidate(self, candidate_to_add):
-       # candidate_to_add = self.backup_candidates_copy[0]
         return_ballot = []
 
         for vote in self.voteBreakdown_copy:
@@ -291,34 +355,7 @@ class RankedVote(Vote):
 
         return results
 
-    def copeland_method(self):
-        comparisons = defaultdict(int)
 
-        for perm in combinations(self.valid_candidates, 2):
-            result = self.pairwise_comparison(perm[0], perm[1])
-            if not result[perm[0]] == result[perm[1]]:
-                if result[perm[0]] > result[perm[1]]:
-                    comparisons[perm[0]] += 1
-                    comparisons[perm[1]] -= 1
-                else:
-                    comparisons[perm[1]] += 1
-                    comparisons[perm[0]] -= 1
-        return comparisons
-
-    def minmax_method(self):
-        minmax_store = defaultdict(int)
-        for ballot in self.voteBreakdown_copy:
-            for perm in combinations(self.valid_candidates, 2):
-                result = self.pairwise_comparison(perm[0], perm[1])
-
-                # the winner of minmax method is tha candidate that has the best worst showing. so every time there is a pairwise
-                # comparison if the opponenst result is better then their current worst replace it
-                if minmax_store[perm[0]] < result[perm[1]]:
-                    minmax_store[perm[0]] = result[perm[1]]
-                if minmax_store[perm[1]] < result[perm[0]]:
-                    minmax_store[perm[1]] = result[perm[0]]
-
-        return minmax_store
 
     def find_best_add(self, votes = None):
         backup_dict = defaultdict(int)
@@ -347,24 +384,5 @@ class RankedVote(Vote):
         self.valid_candidates_copy.remove(candidate)
 
     # todo finish and test this code
-    def ranked_pairs(self):
-        connections = defaultdict(int)
-        for perm in combinations(self.valid_candidates_copy, 2):
-            result = self.pairwise_comparison(perm[0], perm[1])
-            if not result[perm[0]] == result[perm[1]]:
-                if result[perm[0]] < result[perm[1]]:
-                    connections[(perm[1], perm[0])] = result[perm[1]]
-                else:
-                    connections[(perm[0], perm[1])] = result[perm[0]]
 
-        connect = sorted(connections, key=connections.get)
-        connect.reverse()
-        g = Graph.Graph([], directed=True)
-        is_cycle = False
-        for vertex in connect:
-            g.add(vertex[0], vertex[1])
-            if g.isCyclic():
-                break
-
-        return g.find_source()
 

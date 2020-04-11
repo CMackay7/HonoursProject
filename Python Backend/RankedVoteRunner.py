@@ -258,6 +258,7 @@ class RankedVoteRunner:
     def run_minmax(self):
         updates = {"nil": "nil"}
         json = {"MNX": updates}
+
         breakdown = self.ranked_vote.minmax_method()
         winner = min(breakdown, key=breakdown.get)
 

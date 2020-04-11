@@ -47,7 +47,7 @@ class RankedButton extends React.Component{
         console.log(jsonString);
         var jsonobject = JSON.parse(jsonString);
         //var returned = this.fetchFromApi(jsonobject);
-
+        //console.log;
         if (tosend){
             history.push({
                 pathname: '/results',

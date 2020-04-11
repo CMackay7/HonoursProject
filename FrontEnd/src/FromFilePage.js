@@ -6,6 +6,14 @@ import { JumbotronFromFile } from './components/Jumbotron_From_file';
 import { Layout } from './components/Layout';
 import JSONPretty from 'react-json-pretty';
 
+const CustomButton = styled.button`
+    margin-top: 10px;
+    border-radius: 5px;
+    padding: 2px;
+    border: 0.5px solid black;
+    margin-right: 3%;
+
+`;
 
 const Button = styled.button`
     font-family: sans-serif;
@@ -45,7 +53,7 @@ class FromFilePage extends React.Component{
                 <Layout>
                 <input id="input" placeholder="Enter the filename" type="file" onChange={() => this.onChangeHandler()}></input>
                 <JSONPretty id="json-pretty" data={this.state.displayData}></JSONPretty>
-                <Button disabled={!this.state.data} onClick={() => this.sendapi()}>Run Election</Button>
+                <CustomButton disabled={!this.state.data} onClick={() => this.sendapi()}>Run Election</CustomButton>
                 </Layout>
             </nav>
         );

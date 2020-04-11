@@ -149,7 +149,7 @@ class BallotEdditScore extends React.Component {
     }
     add_candidate(){
         var writeto = this.state.ballot;
-
+        
         if((this.state.candidate === "")||(this.state.score === "")){
             return;
         }
@@ -190,10 +190,11 @@ class BallotEdditScore extends React.Component {
     }
 
     complete_ballot(){
-        if((this.state.votes === "" ) || (this.state.ballot === [])){
+        
+        if((this.state.votes === "" ) || (this.state.ballot.length === 0)){
             return;
         }
-
+//
         const finalballot = {
             ballot: this.state.ballot,
             votes: this.state.votes,

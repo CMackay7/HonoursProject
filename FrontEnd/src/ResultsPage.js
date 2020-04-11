@@ -58,7 +58,7 @@ if (this.state.datarecieved) {
   }
 
   async fetchFromApi(jsonobject, urlextention){
-        
+    console.log("hello did this break")
     var url = 'http://vps755069.ovh.net/' + urlextention 
 
     const options = {

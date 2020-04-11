@@ -1,10 +1,10 @@
-import json
+
 import RankedBallot
 from ScoreBallot import ScoreBallot
 from collections import defaultdict
 from Candidate import Candidate
 
-
+# Get the data from a plurality ballot
 def get_ballots_plurality(ballot_data):
     vote_breakdown = defaultdict(int)
     candidates = set()
@@ -14,9 +14,10 @@ def get_ballots_plurality(ballot_data):
             candidates.add(vote)
         vote_breakdown[vote] += int(ballot_data[vote])
 
+    # Returns the vote breakdown and the candidates that were sent to the system
     return vote_breakdown, candidates
 
-
+# Return the data from a ranked vote
 def get_ballots_ranked(ballot_data):
     candidates = set()
     vote_breakdown = []
@@ -25,20 +26,23 @@ def get_ballots_ranked(ballot_data):
         votes = int(ballot_data[vote])
 
         ballot = defaultdict(str)
+        # When the data is sent to the system the data is split by double slashes to need to sepearate the data
         candidates_in_vote = vote.split("//")
-        # todo: change this so it matches to an actual candidate
+
         for candidate in candidates_in_vote:
             if not (candidate in candidates):
+                # Add candidate to the list of candidates
                 candidates.add(candidate)
             # it uses counter because the key needs to be the round for later processing
             ballot[counter] = candidate
             counter += 1
 
+        # Create ballot object
         ranked_ballot = RankedBallot.RankedBallot(votes, ballot)
         vote_breakdown.append(ranked_ballot)
     return vote_breakdown, candidates
 
-
+# Return the data from a score vote
 def get_ballots_score(ballot_data):
     vote_breakdown = []
     candidates = set()
@@ -46,14 +50,17 @@ def get_ballots_score(ballot_data):
         votes = int(ballot_data[vote])
 
         ballot = defaultdict(int)
+        # split the data
         candidates_in_vote = vote.split("//")
         for candidate in candidates_in_vote:
             candidate_data = candidate.split(":")
             if not (candidate_data[0] in candidates):
                 candidates.add(candidate_data[0])
-            candidate_data = candidate.split(":")
+
+            # First element is the candidate name second is the score they were assigned
             ballot[candidate_data[0]] = int(candidate_data[1])
 
+        #Create score ballot object
         score_ballot = ScoreBallot(votes, ballot)
         vote_breakdown.append(score_ballot)
     return vote_breakdown, candidates

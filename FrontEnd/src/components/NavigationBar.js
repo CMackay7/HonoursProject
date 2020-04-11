@@ -25,8 +25,8 @@ export const NavigationBar = () => (
 
                 <Nav justify variant="tabs">
                 <Nav.Item><Nav.Link href="/">Plurality</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="/ranked">Ranked</Nav.Link></Nav.Item>
-                <Nav.Item><Nav.Link href="/score">Score</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link href="/ranked_vote">Ranked</Nav.Link></Nav.Item>
+                <Nav.Item><Nav.Link href="/score_vote">Score</Nav.Link></Nav.Item>
                 <Nav.Item><Nav.Link href="/from_file">From File</Nav.Link></Nav.Item>
             
             </Nav>
