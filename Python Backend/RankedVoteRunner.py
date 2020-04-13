@@ -13,6 +13,8 @@ class RankedVoteRunner:
             self.add_order = []
             self.remove_order = []
 
+    # This generates the best order to add the candidates in so it doesn't have to be re-calculated every election
+    # system
     def best_add_order(self):
         loop_length = len(self.ranked_vote.backup_candidates_copy)
 
@@ -20,6 +22,7 @@ class RankedVoteRunner:
 
         for i in range(loop_length):
             add = self.ranked_vote.find_best_add()
+            # if add == " that means that it is no longer beneficial to add more candidates
             if add == "":
                 break
             returndict.append(add)
@@ -27,6 +30,8 @@ class RankedVoteRunner:
 
         return returndict
 
+    # This generates the best order to remove the candidates in so it doesn't have to be re-calculated every election
+    # system
     def best_remove_order(self):
         loop_length = len(self.ranked_vote.valid_candidates_copy)
 
@@ -34,6 +39,7 @@ class RankedVoteRunner:
 
         for i in range(loop_length):
             add = self.ranked_vote.find_best_remove()
+            # if add == "" that means it is no longer beneficial to continue to remove candidates from the ballot
             if add == "":
                 break
             returndict.append(add)
@@ -41,12 +47,16 @@ class RankedVoteRunner:
         self.ranked_vote.reset()
         return returndict
 
-
-
+    # This is where the computation is done, this function runs every voting method for ranked votes
     def run_election(self):
         return_dict = {}
         candidate_to_win = self.ranked_vote.candidateToWin
+
         if self.add_remove_allowed is False:
+            # Here is runs every vote where editing is not allowed
+
+            # each methid returns the candidate that won so if this == candidate_to_win add it to the
+            # dictionary that will be returned
             runoff = self.run_instantrunoff()
             if runoff == candidate_to_win:
                 return_dict.update({"IRN": ""})
@@ -66,6 +76,8 @@ class RankedVoteRunner:
             if rankedpairs == candidate_to_win:
                 return_dict.update({"RP":""})
         else:
+            # This runs every voting method with editing allowed here it will return the candidate that won along
+            # with any edditing that was required to help the chosen candidate win
             runoff = self.run_instantrunnoff_true()
             self.ranked_vote.reset()
             if runoff[0] == candidate_to_win:
@@ -114,16 +126,20 @@ class RankedVoteRunner:
         if winner == self.ranked_vote.candidateToWin:
             return winner, json
         else:
+            # First it will loop adding candidates and re-checking if the chosen candidate has won
             for loop in range(loop_len):
                 add = self.add_order[loop]
                 self.ranked_vote.add_candidate(add)
                 updates[add] = "added"
+                # keep not of which candidates have been added to the ballot
                 breakdown = self.ranked_vote.instantrunoffmethod()
                 winner = max(breakdown, key=breakdown.get)
                 if winner == self.ranked_vote.candidateToWin:
                     json["IRN"] = updates
                     return winner, json
 
+            # If it runs out of candidates to add then it will start removing candidates note that candidates
+            # that have been previously added will not be removed
             for loop in range(len(self.remove_order)):
                 remove = self.remove_order[loop]
                 self.ranked_vote.remove_candidate(remove)

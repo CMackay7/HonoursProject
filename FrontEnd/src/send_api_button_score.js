@@ -31,6 +31,9 @@ class ScoreButton extends React.Component{
         )
     }
     create_json_string(tosend){
+        if((this.props.ballots === [])||(this.props.candidatetowin ==="") || (this.props.candidates === [])){
+            return;
+        }
         var jsonString = "{";
         var ballotstring = this.create_plurality_ballot_string(this.props.ballots);
         var canidatejson = this.create_candidates_json(this.props.candidates, this.props.similarities,this.props.edditable)

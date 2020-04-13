@@ -1,9 +1,6 @@
 from Vote import Vote
-import copy
 from collections import defaultdict
-import RankedBallot
-from itertools import combinations
-import Graph
+
 
 
 class ScoreVote(Vote):
@@ -12,6 +9,11 @@ class ScoreVote(Vote):
     def __init__(self, candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win):
         super().__init__(candidates, voteBreakdown, backup_candidates, valid_candidates, candidate_to_win)
 
+    ###################################################################################################################
+    #                                              VOTING SYSTEMS                                                     #
+    ###################################################################################################################
+
+    # Sum vote simply sums the (score * percentage)
     def sum_vote(self):
         vote_breakdown = defaultdict(int)
         for candidate in self.valid_candidates:
@@ -22,6 +24,7 @@ class ScoreVote(Vote):
 
         return vote_breakdown
 
+    # Mean vote works out the mean score for each candidate
     def mean_vote(self):
         vote_breakdown = defaultdict(float)
         sum_breakdown = self.sum_vote()
@@ -32,17 +35,12 @@ class ScoreVote(Vote):
 
         return vote_breakdown
 
-    def number_of_ballots_appeared_on(self):
-        return_dict = defaultdict(int)
-        for ballot in self.voteBreakdown_copy:
-            for candidate in ballot.candidateScores:
-                return_dict[candidate] += ballot.percentage
-
-        return return_dict
-
+    # Star vote runs a sum vote and selects the highest two candidates as finalists
+    # next it will loop through every ballot and find the cnadidate who is ranked highest on the most ballots
     def star_vote(self):
         return_dict = defaultdict(int)
 
+        # process of selecting the two highest winners in sum vote
         sum_of_votes = self.sum_vote()
         highest_two = self.find_highest_two(sum_of_votes)
         first_candidate = highest_two[0]
@@ -61,6 +59,19 @@ class ScoreVote(Vote):
 
         return self.find_total_percentage(return_dict)
 
+    ###################################################################################################################
+    #                                              HELPER FUNCTIONS                                                   #
+    ###################################################################################################################
+
+    def number_of_ballots_appeared_on(self):
+        return_dict = defaultdict(int)
+        for ballot in self.voteBreakdown_copy:
+            for candidate in ballot.candidateScores:
+                return_dict[candidate] += ballot.percentage
+
+        return return_dict
+
+    # This function converts the votes each option got to a percentage
     def find_total_percentage(self, results):
         total_votes = 0
         converted_votes = {}
@@ -69,12 +80,13 @@ class ScoreVote(Vote):
 
         for candidate in results:
             percentage_won = (results[candidate] / total_votes) * 100
+            # Want the values as an int
             added_votes = round(percentage_won, 0)
             converted_votes[candidate] = added_votes
 
         return converted_votes
 
-    # todo move this into vote so it can be used by every class
+    # finds the highest two values
     def find_highest_two(self, breakdown):
         highest = (max(breakdown, key=breakdown.get))
         del breakdown[highest]

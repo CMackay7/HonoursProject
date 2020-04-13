@@ -266,6 +266,8 @@ class RankedVote(Vote):
         self.backup_candidates_copy = copy.deepcopy(self.backup_candidates)
 
     # Add the selected candidate to the ballot
+    # The way a vote changes when a candidate is added a cetrain percentage of voters rank this candidate first
+    # and another percentage just rank this candidate somewhere in their ballot.
     def add_candidate(self, candidate_to_add):
         return_ballot = []
 
@@ -274,24 +276,31 @@ class RankedVote(Vote):
             first_candidate_similarity = self.find_candidate(vote.candidateRanking[1]).CandidateSimilarity
             added_candidate_similarity = first_candidate_similarity[candidate_to_add]
             if added_candidate_similarity > 0:
+                # Firstly if the similarity between two candidates is > 0 then then a percentage (* 10 of the
+                # similarity) puts this candidate first
                 candidate_order = self.shift_ranks_down(vote.candidateRanking, 1)
                 candidate_order[1] = candidate_to_add
 
                 numbers_to_add = (vote.percentage * (added_candidate_similarity / 10))
                 votes_lost = numbers_to_add
                 vote_to_add = RankedBallot.RankedBallot(numbers_to_add, candidate_order)
-                #updated_vote = RankedBallot.RankedBallot(vote.percentage - numbers_to_add, vote.candidateRanking)
                 return_ballot.append(vote_to_add)
-                #return_ballot.append(updated_vote)
             counter = 1
             added = False
+
+            # Next the number of candidates that ranks this candidate somewhere in their ballot needs to be
+            # calculated
             for candidate in vote.candidateRanking:
 
                 if vote.candidateRanking[candidate] in first_candidate_similarity:
+                    # the method here is to go down the list and compare the similarity from the first ranked candidate
+                    # to the added candidate and compare this with the similarity from the first candidate to the
+                    # candidate in the nth position (going down the ranks). Whenever the added candidate rank is
+                    # higher add that candidate there
                     if first_candidate_similarity[candidate_to_add] > first_candidate_similarity[vote.candidateRanking[candidate]]:
                         candidate_order = self.shift_ranks_down(vote.candidateRanking, counter)
                         candidate_order[counter] = candidate_to_add
-                        numbers_to_add = (vote.percentage - votes_lost)# * (first_candidate_similarity / 10))
+                        numbers_to_add = (vote.percentage - votes_lost) * (first_candidate_similarity[candidate_to_add] / 10)
                         vote_to_add = RankedBallot.RankedBallot(numbers_to_add, candidate_order)
                         return_ballot.append(vote_to_add)
                         added = True
@@ -309,7 +318,7 @@ class RankedVote(Vote):
         self.voteBreakdown_copy = return_ballot
 
 
-
+    # When a candidate is added in the to the ballot some candidates positions need to be shifted down
     def shift_ranks_down(self, candidate_order, pos_start):
         vote = {}
 
@@ -339,8 +348,8 @@ class RankedVote(Vote):
 
     # Work out the results of a pairwise comparison between two candidates
     def pairwise_comparison(self, a, b):
-        out = {a:0.0, b:0.0}
-        #counter = 1
+        out = {a: 0.0, b: 0.0}
+
         for ballot in self.voteBreakdown_copy:
             for candidate in range(1, len(ballot.candidateRanking) + 1):
                 cand = ballot.candidateRanking[candidate]
@@ -355,13 +364,12 @@ class RankedVote(Vote):
 
         return results
 
-
-
+    # the best candidate to win in this type of voting method is one where
     def find_best_add(self, votes = None):
         backup_dict = defaultdict(int)
         candidate_to_win = self.find_candidate(self.candidateToWin)
         for backup_candidate in self.backup_candidates_copy:
-            #backup_candidate_similarity = self.find_candidate(backup_candidate).candidateSimilarity
+
             candidate_towin_added = candidate_to_win.CandidateSimilarity[backup_candidate]
             if candidate_towin_added == 0:
                 for candidate in self.valid_candidates:
@@ -383,6 +391,5 @@ class RankedVote(Vote):
     def delete_valid(self, candidate):
         self.valid_candidates_copy.remove(candidate)
 
-    # todo finish and test this code
 
 

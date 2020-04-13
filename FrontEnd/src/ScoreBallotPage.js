@@ -38,6 +38,7 @@ class ScorePage extends React.Component{
     this.delete_ballot = this.delete_ballot.bind(this);
     this.add_ranked_ballot = this.add_ranked_ballot.bind(this);
     this.set_candidate_to_win = this.set_candidate_to_win.bind(this);
+    this.ballots_contain_candidate = this.ballots_contain_candidate.bind(this);
   }
 
   render(){
@@ -50,8 +51,8 @@ class ScorePage extends React.Component{
           <BallotEdditScore candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
           <h3>Ballots</h3>
           <ScoreBallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
-          <Custombutton onClick={() => this.populate_similarities()}> add similarities</Custombutton>
-          <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
+          
+         
           <ScoreButton ballots={this.state.ballots} candidates={this.state.items} edditable={this.state.edditable}  candidatetowin={this.state.candidateToWin} similarities={this.state.similarities}/>
           </Layout>
         </div>
@@ -61,7 +62,8 @@ class ScorePage extends React.Component{
   }
 
   //          <BallotEddit candidates={this.state.items} add_ballot = {this.add_ballot}/>
-
+  // <EdditSimilarities id="edditsim" hidden similarities={this.state.similarities} update_similarities={this.update_similarities}/>
+  //<Custombutton onClick={() => this.populate_similarities()}> add similarities</Custombutton>
   showDiv() {
     //document.getElementById('welcomeDiv').style.display = "block";
     if(document.getElementById("edditsim").checked === true){
@@ -110,6 +112,7 @@ class ScorePage extends React.Component{
     //console.log(place);
     //var place = this.find_candidate_in_ballot(this.state.items[place].text);
     var deletedcandidate = this.state.items[place];
+    this.ballots_contain_candidate(deletedcandidate)
     var ballotplace = this.find_candidate_in_ballot(deletedcandidate.text);
     const newitems = this.state.items;
     newitems.splice(place, 1);
@@ -125,6 +128,33 @@ class ScorePage extends React.Component{
       this.delete_candidates_fromsim(deletedcandidate);
     }
     
+  }
+
+  ballots_contain_candidate(candidate_deleted){
+    var ballots_to_delete = []
+    for(var ballot = 0; ballot < this.state.ballots.length; ballot++){
+      var currentBallot = this.state.ballots[ballot]
+      var currentCandidates = currentBallot.ballot
+      for (var candidate = 0; candidate < currentCandidates.length; candidate++){
+        var currentCandidate = currentCandidates[candidate].candidate
+        if (currentCandidate === candidate_deleted.text){
+          ballots_to_delete = ballots_to_delete.concat(ballot)
+          break;
+        }
+      }
+
+    }
+
+    var new_ballots  = this.state.ballots;
+    var delete_count = 0;
+    for(var deleteplace = 0; deleteplace < ballots_to_delete.length; deleteplace++){
+      new_ballots.splice(ballots_to_delete[deleteplace] - delete_count, 1);
+      delete_count = delete_count + 1
+    }
+
+    this.setState(state => ({
+      ballots: new_ballots,
+    }));  
   }
 
   delete_ballot(place){
