@@ -1,6 +1,5 @@
+// This is the componenet that allows the user to select which candidate they want to win
 import React from 'react';
-import {Link} from 'react-router-dom'
-import { DropdownButton } from 'react-bootstrap'; 
 import styled from 'styled-components'
 
 const Customselected = styled.div`
@@ -15,10 +14,10 @@ class CandidateToWin extends React.Component {
 
     constructor(props){
         super(props);
-        this.state = {candidates: [], ballot:[], candidate:"",score:"", votes:""};
         this.onSelectCandidate = this.onSelectCandidate.bind(this);
     }
 
+    // Render a drop down option box which contains every candidate
     render(){
         return(
             <Customselected>     
@@ -33,6 +32,8 @@ class CandidateToWin extends React.Component {
         );
     }
 
+    // This function is called when the user selects a candidate it calls the setter
+    // in the main file
     onSelectCandidate(){
         var e = document.getElementById("candtowinSelect");
         var strUser = e.options[e.selectedIndex].value;

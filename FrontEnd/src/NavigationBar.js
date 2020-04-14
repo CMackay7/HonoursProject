@@ -38,29 +38,3 @@ export const NavigationBar = () => (
 
         </Styles>
     )
-
-
-    /*
-                <Styles>
-            <Navbar expand="lg">
-                <Navbar.Brand href="/">Election App</Navbar.Brand>
-            <Navbar.Toggle aria-controls="basic-navbar-nav"/>
-            <Navbar.Collapse id = "basic-navbar-nav">
-            <Nav justify variant="tabs" defaultActiveKey="/">
-                <Nav.item>
-                    <Nav.link href="/">Plurality</Nav.link>
-                </Nav.item>
-                <Nav.item>
-                    <Nav.link href="/ranked">Ranked</Nav.link>
-                </Nav.item>
-                <Nav.item>
-                    <Nav.link href="/score">Score</Nav.link>
-                </Nav.item>
-                <Nav.item>
-                    <Nav.link href="/from_file">From File</Nav.link>
-                </Nav.item>
-            </Nav>
-            </Navbar.Collapse>
-            </Navbar>
-        </Styles>
-    */

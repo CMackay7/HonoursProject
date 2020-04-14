@@ -1,3 +1,5 @@
+// This is the componenet that displays the list of ballots to the user 
+
 import React from "react";
 import styled from 'styled-components'
 
@@ -7,12 +9,6 @@ const StyledDiv = styled.div`
     background: white;
     
     height:15px;
-  }
-
-  ion-icon{
-    font-size: 32px;
-    
-    color: #c41313;
   }
 
   .customli{
@@ -39,6 +35,8 @@ class BallotList extends React.Component {
     this.state = {candidate: "", votes: ''};
 }
 
+// All this conponenet has to contain is a list of the ballots that have been added
+// along with a button to allow the user to delete the ballot
     render(){
         return(
           <StyledDiv>
@@ -54,10 +52,10 @@ class BallotList extends React.Component {
         )
     }
 
+    // find the ballot that has been selected for deletion and send to the main file
     deleteBallot(candidatename){
       var place = 0;
       for(var i = 0; i < this.props.ballots.length; i++){
-        //console.log("vsfdsvsdv: " + this.props.ballots[i].candidate)
         if(candidatename === this.props.ballots[i].candidate){
           place = i;
           break;

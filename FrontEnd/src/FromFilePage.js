@@ -1,3 +1,4 @@
+// This is the page to load and run an election from file
 import React from 'react';
 import history from './history';
 import {Link} from 'react-router-dom'
@@ -45,7 +46,8 @@ class FromFilePage extends React.Component{
           this.sendapi = this.sendapi.bind(this);
     }
 
-
+    // have a file input which reads the file when it is selected by the user
+    // JSONPretty diaplays the json from file ordered 
     render() {  
         return(        
             <nav>
@@ -60,6 +62,8 @@ class FromFilePage extends React.Component{
     }
 
     sendapi(){
+        // go to the results page and send the data that needs to be sent to the 
+        // server
         var object = this.state.data
         var objects = object.split("|");
         var objtosend = JSON.parse(objects[1]);
@@ -75,6 +79,7 @@ class FromFilePage extends React.Component{
     
     }
 
+    //Call here when the user selects a file
     onChangeHandler(){
         var file = document.getElementById('input').files[0];
         console.log(file);
@@ -90,11 +95,9 @@ class FromFilePage extends React.Component{
 
     }
 
+    // Read the data from the file
     readfiles(file, callback){
         var fileReader = new FileReader();
-
-        // 3. This function will be called when readAsArrayBuffer() has
-        // finished reading the file 
         fileReader.onloadend = function(e) {
             var data = fileReader.result
     
@@ -103,29 +106,6 @@ class FromFilePage extends React.Component{
 
         fileReader.readAsText(file)
     }
-
-    // onChangeHandler=event=>{
-    //     //let file = event.target.files[0];
-    //     //console.log(file);
-    //     let data = document.getElementById('input').files[0];
-    //     var filereader = new FileReader();
-    //     filereader.readAsText(data)
-    //     var databack = ""
-    //     filereader.onload = function() {
-    //         //console.log("look here");
-    //         //console.log(filereader.result)
-            
-    //         databack = filereader.result;
-    //     };
-    //     console.log(filereader.onload())
-    //     if (!(databack === "")){
-    //         this.sendback(databack);
-    //     }
-    //     console.log(filereader.result);
-    //     //data.append('file', file)
-    //     console.log(data)
-
-    // }
 
     sendback(data){
         console.log("this worked if: ");

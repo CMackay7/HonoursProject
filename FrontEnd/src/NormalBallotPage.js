@@ -1,15 +1,8 @@
 import React from 'react';
-import logo from './logo.svg';
-import MyComp from "./teststuff";
 import TodoList from "./todo_list";
 import BallotEddit from "./ballot_add";
 import BallotList from "./ballot_list";
 import EdditSimilarities from "./edditSimilarities";
-import BallotEdditRanked from "./ranked_ballot_add";
-import BallotEdditScore from "./score_ballot_add";
-import RankedPage from "./rankedBallotPage";
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
-//import Nav from './NavigationBar';
 import CandidateToWin from "./candidate_to_win";
 import PluralityButton from "./send_api_buttin";
 import { Jumbotron } from './components/Jumbotron_Plurality';
@@ -19,7 +12,7 @@ import './App.css';
 
 const NiceButton = styled.button`
 
-border-radius: 5px;
+    border-radius: 5px;
     border: 0.5px solid black; 
     height: 40px;
     width: 120px;
@@ -39,7 +32,7 @@ class NormalPage extends React.Component{
     this.update_similarities = this.update_similarities.bind(this);
     this.delete_candidates_fromsim = this.delete_candidates_fromsim.bind(this);
     this.delete_ballot = this.delete_ballot.bind(this);
-    this.add_ranked_ballot = this.add_ranked_ballot.bind(this);
+    //this.add_ranked_ballot = this.add_ranked_ballot.bind(this);
     this.set_candidate_to_win = this.set_candidate_to_win.bind(this);
   }
 
@@ -51,7 +44,7 @@ class NormalPage extends React.Component{
           <Layout>
           <CandidateToWin set_candidate_to_win = {this.set_candidate_to_win} candidates={this.state.items}/>
           <TodoList items={this.state.items} add_candidate = {this.add_candidate} delete_candidate = {this.delete_candidate}/>
-          <BallotEddit candidates={this.state.items} add_ballot = {this.add_ranked_ballot}/>
+          <BallotEddit candidates={this.state.items} add_ballot = {this.add_ballot}/>
           <h3>Ballots</h3>
           <BallotList ballots={this.state.ballots} deleteballot = {this.delete_ballot}/>
           <NiceButton onClick={() => this.populate_similarities()}> add similarities</NiceButton>
@@ -65,35 +58,23 @@ class NormalPage extends React.Component{
     );
   }
 
-  //          <BallotEddit candidates={this.state.items} add_ballot = {this.add_ballot}/>
-
-  showDiv() {
-    //document.getElementById('welcomeDiv').style.display = "block";
-    if(document.getElementById("edditsim").checked === true){
-      document.getElementById("edditsim").style.display = "block";
-      //alert("remove");
-    } else{
-      document.getElementById("edditsim").style.display = "none";;
-      //alert("add");
-    }
- }
-
+  //setter for the candidate to win
   set_candidate_to_win(candidate){
+    // just stores the local candidate in the state for this component
     this.setState(state => ({
       candidateToWin: candidate,
     }));
   }
 
+  // This function adds a new candidate to the state 
   add_candidate(candidate){
-    
-
     const newItem = {
       text: candidate,
       id: Date.now()
     };
-    var something = this.state.items;
 
-    console.log(this.state.items);
+    // if the user is allowing editing then the canddiate that has been addded needs to be added 
+    // to the list of similarities 
     if(Object.keys(this.state.similarities).length > 0){
       this.setState({
         items: this.state.items.concat(newItem)
@@ -109,28 +90,34 @@ class NormalPage extends React.Component{
     }
   }
 
+  // This function is used to delete the candidate from the state 
   delete_candidate(place){
-    //console.log(place);
-    //var place = this.find_candidate_in_ballot(this.state.items[place].text);
     var deletedcandidate = this.state.items[place];
     var ballotplace = this.find_candidate_in_ballot(deletedcandidate.text);
     const newitems = this.state.items;
+
+    // Splicing the array to delete the candidate at the position
     newitems.splice(place, 1);
     this.setState(state => ({
       items: newitems,
     }));
 
+    // if there is a ballot with the deleted candidate in delete the ballot as well
     if(!(ballotplace === -1)){
       this.delete_ballot(ballotplace);
     }
 
+    //Delete the candidate from the list of similarities 
     if (Object.keys(this.state.similarities).length > 0) {
       this.delete_candidates_fromsim(deletedcandidate);
     }
     
   }
 
+  // Used to delete a ballot
   delete_ballot(place){
+    // the place that needs to be deleted is passed in so all that needs
+    // to happen is a splice and set
     var new_ballots  = this.state.ballots;
     new_ballots.splice(place, 1);
 
@@ -140,9 +127,12 @@ class NormalPage extends React.Component{
   }
 
   add_ballot(item){
+    // returns -1 if the candidate hasnt already been added 
+    // if the candidate has it returns where the candidate is 
     var place = this.find_candidate_in_ballot(item.candidate);
     
     if (!(place === -1)) {
+      //if the candidate is already on the ballot just update the votes
       var old_ballots = this.state.ballots;
       var ballot = old_ballots[place];
       old_ballots.splice(place,1);
@@ -158,23 +148,19 @@ class NormalPage extends React.Component{
         ballots: new_ballots,
       }));
     } else {
+
+      // if they are not on a ballot add a new one
       this.setState(state => ({
         ballots: state.ballots.concat(item),
       }));
     }
   }
 
-  add_ranked_ballot(item){
-    console.log("herre");
-    this.setState(state => ({
-      ballots: state.ballots.concat(item),
-    }));
-    console.log("got added");
-  }
 
+
+  // Loop through the ballots to find the selected candidate
   find_candidate_in_ballot(candidate){
     var place = -1;
-
     for (var i = 0; i < this.state.ballots.length; i++){
       var ballot = this.state.ballots[i];
       if (ballot.candidate === candidate){
@@ -182,29 +168,27 @@ class NormalPage extends React.Component{
         place = i;
       }
     }
+    // return the position of the candidate
     return place;
   }
 
-  // find_candidate_name(place){
-  //   for (var i = 0; i< this.state.items.length; i++){
-
-  //   }
-  // }
-
+  // update the similarities of the candidates.
+  // it is how similar candfrom is to candto
   update_similarities(candfrom, candto, value){
     var simms = this.state.similarities;
     simms[candfrom][candto] = value;
-    console.log(simms);
     this.setState(state => ({
       similarities: simms,
     }));
   }
 
+  // when a candidate is delete they also need to be removed from the similarities 
   delete_candidates_fromsim(candidatein){
     var simms = this.state.similarities;
     var keys = Object.keys(this.state.similarities);
     var candidate = candidatein.text;
 
+    // loop through every candidate and delete the candidate from each 
     for(var i = 0; i < keys.length; i++){
 
       if(!(keys[i] === candidate)){
@@ -213,20 +197,25 @@ class NormalPage extends React.Component{
       
     }
 
+    // then delete the actual candidate from similarities 
     delete simms[candidate];
-    console.log(simms);
     this.setState(state => ({
       similarities: simms,
     }));
   }
 
+  // instanciate the simsilariteis
   populate_similarities(){
     var dict_to_add = {};
+
+    //set edditable to true
     if (this.state.edditable === false){
       this.setState(state => ({
         edditable: true,
       }));
     }
+
+
     for(var i = 0 ; i < this.state.items.length; i++){
       var currcand = this.state.items[i].text;
       

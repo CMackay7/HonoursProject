@@ -5,10 +5,10 @@ import styled from 'styled-components'
 const StyledPopup = styled.div`
 
 
-    .styledSelect {
-        width: 60%;
-    
-    }
+.styledSelect {
+    width: 60%;
+
+}
 
     .close {
   cursor: pointer;
@@ -67,10 +67,12 @@ class BallotEdditRanked extends React.Component {
         this.selectElement = this.selectElement.bind(this);
         this.onNumberChange = this.onNumberChange.bind(this);
         this.complete_ballot = this.complete_ballot.bind(this);
-    }
+}
 
     
-
+// To add a ranked ballot a popup needs to be shown.
+// In the popup there has to be a dropdown to select a cadidate
+// a button to add the candidate to the ballot and the number of votes recieved
     render(){
 
         var select_values = this.generate_list();
@@ -114,6 +116,7 @@ class BallotEdditRanked extends React.Component {
         )
     }
 
+    // when they select a candidate in the dropdown it needs to be stored in the state
     onSelectCandidate() {
         var e = document.getElementById("candidateSelect");
         var strUser = e.options[e.selectedIndex].value;
@@ -122,48 +125,63 @@ class BallotEdditRanked extends React.Component {
         this.setState({candidate: strUser});
     }
     
+    // this is used to reset the select bar
     selectElement(id, valueToSelect) {    
+        // when the value is set to 1 it will display -- select an option --
         let element = document.getElementById(id);
         element.value = valueToSelect;
     }
+
+    // add a candidate to the state 
     add_candidate(){
         var writeto = this.state.ballot;
+        // check the user has entered values 
         if((this.state.candidate === "")||(this.state.rank ==="")){
             return;
         }
+        //create the ballot object 
         const newBallot = {
             candidate: this.state.candidate,
             rank: this.state.rank,
             id: Date.now()
         };
+
+        //Add it to the state 
         writeto = writeto.concat(newBallot);
         this.setState(state => ({
             
             ballot: writeto,
             rank:  (this.state.rank + 1),
+            // increase the rank so the next candidate is added in the correct place
             candidates: this.state.candidates.concat(this.state.candidate),
         }));
 
+        //Reset the select
         this.selectElement("candidateSelect", "1");
     }
+
+    // Store the number of votes
     onNumberChange(e) {
         this.setState({ votes: e.target.value });
     }
 
+    // Generate the list of candidates to have in the dropdown
+    // This is because if a candidate has been added it should 
+    // be removed form the dropdown so the user cannot select the same candidate again
     generate_list(){
         var select_values = this.props.candidates;
         var addedcands = this.state.candidates;
         var outlist = []
 
         for (var i = 0; i < select_values.length; i++){
+            //addedcands stores the candidates, so only the candidates 
+            // which have not already been added are allowed to be selected 
             if(!(addedcands.includes(select_values[i].text))){
                 
                 outlist = outlist.concat(select_values[i]);
             }
         }
-        console.log(outlist);
         return outlist;
-
     }
 
     complete_ballot(){

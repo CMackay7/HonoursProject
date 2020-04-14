@@ -1,12 +1,4 @@
 import React from 'react';
-// import logo from './logo.svg';
-// import MyComp from "./teststuff";
-// import TodoList from "./todo_list";
-// import BallotEddit from "./ballot_add";
-// import BallotList from "./ballot_list";
-// import EdditSimilarities from "./edditSimilarities";
-// import BallotEdditRanked from "./ranked_ballot_add";
-// import BallotEdditScore from "./score_ballot_add";
 import RankedPage from "./rankedBallotPage";
 import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
 import {NavigationBar} from './components/NavigationBar';
@@ -28,6 +20,11 @@ import MeanVote from './Descriptors/MeanVote'
 import StarVote from './Descriptors/StarVote'
 import RankedPairs from './Descriptors/RankedPairs'
 
+/*
+This is the main page of the app, it displays the NagivationBar and runs the router which
+handles moving to different componenets when the url changes.
+Every page that is addressable will be in this router 
+*/
 class App extends React.Component{
 
   render(){

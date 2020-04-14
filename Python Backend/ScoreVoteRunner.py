@@ -11,35 +11,29 @@ class ScoreVoteRunner:
 
         sumvote = self.run_sum_vote()
         if sumvote == candidate_to_win:
-            return_dict.update({"SMV":""})
+            return_dict.update({"SMV": ""})
 
         meanvote = self.run_mean_vote()
         if meanvote == candidate_to_win:
-            return_dict.update({"MNV":""})
+            return_dict.update({"MNV": ""})
 
         starvote = self.run_star_vote()
         if starvote == candidate_to_win:
-            return_dict.update({"STR":""})
+            return_dict.update({"STR": ""})
 
         return return_dict
 
     def run_star_vote(self):
-        #updates = {"nil": "nil"}
-        #json = {"STR":updates}
         breakdown = self.score_vote.star_vote()
         winner = max(breakdown, key=breakdown.get)
         return winner
 
     def run_mean_vote(self):
-        #updates = {"nil": "nil"}
-        #json = {"MN": updates}
         breakdown = self.score_vote.mean_vote()
         winner = max(breakdown, key=breakdown.get)
         return winner
 
     def run_sum_vote(self):
-        #updates = {"nil": "nil"}
-        #json = {"SM": updates}
         breakdown = self.score_vote.sum_vote()
         winner = max(breakdown, key=breakdown.get)
         return winner

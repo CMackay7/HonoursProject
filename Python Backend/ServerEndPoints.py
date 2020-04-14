@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import request
-#from flask_cors import CORS
+from flask_cors import CORS
 import json_vote_decoder
 from PluralityVote import PluralityVote
 from PluralityVoteRunner import PluralityVoteRunner
@@ -12,7 +12,7 @@ import json
 
 app = Flask(__name__)
 
-#CORS(app)
+CORS(app)
 
 # There are three end points on the backend of my server one for each electoral system
 
