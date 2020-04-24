@@ -26,15 +26,36 @@ const Styles = styled.div`
   }
 `;
 
+const Styledbottomp = styled.p`
+  position: relative;
+  bottom: 25px;
+  padding-top: 5px;
+`;
+
+const Styledtopp = styled.p`
+  position: relative;
+  bottom: 15px;
+ 
+`;
+const Styledh1 = styled.h1`
+  position: relative;
+  bottom: 20px;
+`;
+
 export const JumbotronRanked = () => (
   <Styles>
     <Jumbo fluid className="jumbo">
       <div className="overlay"></div>
       <Container>
-        <h1>Ranked</h1>
-        <p>A Ranked voting system is one in which voters may vote for multiple candidates, ranking them.
+        <Styledh1>Ranked</Styledh1>
+        <Styledtopp>A Ranked voting system is one in which voters may vote for multiple candidates, ranking them.
             E.G. First Preference "A", Second Preference "B"
-        </p>
+        </Styledtopp>
+        <Styledbottomp>
+          To run an election, you need to add candidates, ballots (to describe how voters 
+          have voted) and the candidate you want to win. If you want allow the system to add and remove
+          candidates you will have to add similarities.
+        </Styledbottomp>
       </Container>
     </Jumbo>
   </Styles>

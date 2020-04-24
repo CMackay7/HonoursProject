@@ -21,26 +21,6 @@ class ResultsPage extends React.Component{
     this.fetchFromApi(this.props.location.state.json, this.props.location.state.urltouse)
   }
 
-/*
-if (this.state.datarecieved) {
-      return (
-        <div>
-          <h3>
-            got data mf!
-          </h3>
-        </div>
-      );
-    } else {
-      return (
-        <div>
-          <h3>
-            Made it!
-          </h3>
-        </div>
-      );
-    }
-*/
-
   render(){
     return(
       <div>
@@ -50,7 +30,7 @@ if (this.state.datarecieved) {
         <JSONPretty id="json-pretty" data={this.state.datasent}></JSONPretty>
         <h3>Results</h3>
         <VoteResultsDisplay json={this.state.votingsystems} />
-        <Documentdownloader json={this.state.votingsystems}/>
+        <Documentdownloader json={this.state.votingsystems} data={this.state.datasent}/>
         </Layout>
       </div>
     )

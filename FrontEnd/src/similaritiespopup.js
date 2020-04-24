@@ -12,11 +12,11 @@ class SimilarPopup extends React.Component {
 
     render(){
         return(
-            <Popup trigger={<button>Add Ballot</button>} position="top left">
+            <Popup trigger={<button>Update Similarity</button>} position="top left">
             {close => (
             <div>
                 <input type="number" id="candidateVotes" onChange={this.onNumberChange} value={this.state.similarity} max="10"></input>
-                <button onClick={() => this.props.handleUpdate(this.props.value, this.state.similarity)} disabled={!this.state.similarity}>Add ballot</button>
+                <button onClick={() => this.props.handleUpdate(this.props.value, this.state.similarity)} disabled={!this.state.similarity}>Update Similarity</button>
                 <a className="close" onClick={close}>
                 &times;
                 </a>

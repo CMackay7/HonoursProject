@@ -58,21 +58,27 @@ class RankedVoteRunner:
             # each methid returns the candidate that won so if this == candidate_to_win add it to the
             # dictionary that will be returned
             runoff = self.run_instantrunoff()
+            self.ranked_vote.reset()
             if runoff == candidate_to_win:
                 return_dict.update({"IRN": ""})
             av_plus = self.run_avplus()
+            self.ranked_vote.reset()
             if av_plus == candidate_to_win:
                 return_dict.update({"AVP": ""})
             borda = self.run_bordacount()
+            self.ranked_vote.reset()
             if borda == candidate_to_win:
                 return_dict.update({"BC": ""})
             copeland = self.run_copeland()
+            self.ranked_vote.reset()
             if copeland == candidate_to_win:
                 return_dict.update({"CPLN": ""})
             minmax = self.run_minmax()
+            self.ranked_vote.reset()
             if minmax == candidate_to_win:
                 return_dict.update({"MNX":""})
             rankedpairs = self.run_rankedpairs()
+            self.ranked_vote.reset()
             if rankedpairs == candidate_to_win:
                 return_dict.update({"RP":""})
         else:

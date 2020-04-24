@@ -204,7 +204,7 @@ class VoteResultsDisplay extends React.Component{
 class ButtonForUse extends React.Component{
   render(){
     return(
-    <Custom_button onClick={() => this.OpenNewTab("http://localhost:3000/" +this.props.url)}>Find out more about {this.props.name}</Custom_button> 
+    <Custom_button onClick={() => this.OpenNewTab("http://testelection.online/" +this.props.url)}>Find out more about {this.props.name}</Custom_button> 
     );
   }
   

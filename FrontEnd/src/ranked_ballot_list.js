@@ -9,11 +9,6 @@ const StyledDiv = styled.div`
     height:15px;
   }
 
-  ion-icon{
-    font-size: 32px;
-    
-    color: #c41313;
-  }
 
   .customli{
     width: 300px;
@@ -41,10 +36,10 @@ class RankedBallotList extends React.Component {
     this.state = {candidate: "", votes: ''};
 }
 
+  // used to display the list of ballots that have been added
+  // also displays a button which when pressed it deletes the ballot
     render(){
         const display_string = this.ballot_to_string();
-        console.log("rsgkjvdfn")
-        console.log(display_string)
         return(
             <StyledDiv>
             <ul>

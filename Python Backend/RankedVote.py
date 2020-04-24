@@ -225,6 +225,7 @@ class RankedVote(Vote):
     # is called as it will workout the best candidate to remove wile running
     def remove_candidate(self, candidate_to_remove):
         self.backup_candidates_copy.append(candidate_to_remove)
+        # Loop through every ballot and delete candidate from
         for i in range(len(self.voteBreakdown_copy)):
             deleted = False
             ballot = self.voteBreakdown_copy[i]

@@ -26,15 +26,36 @@ const Styles = styled.div`
   }
 `;
 
+const Styledtopp = styled.p`
+  position: relative;
+  bottom: 15px;
+ 
+`;
+const Styledh1 = styled.h1`
+  position: relative;
+  bottom: 20px;
+`;
+
+const Styledbottomp = styled.p`
+  position: relative;
+  bottom: 25px;
+  padding-top: 5px;
+`;
+
 export const JumbotronScore = () => (
   <Styles>
     <Jumbo fluid className="jumbo">
       <div className="overlay"></div>
       <Container>
-        <h1>Score</h1>
-        <p>A Score voting system is one in which voters assign scores to each candidate.
+        <Styledh1>Score</Styledh1>
+        <Styledtopp>A Score voting system is one in which voters assign scores to each candidate.
             E.G. Five Points "A", 3 Points "B"
-        </p>
+        </Styledtopp>
+        <Styledbottomp>
+          To run an election, you need to add candidates, ballots (to describe how voters 
+          have voted) and the candidate you want to win. If you want allow the system to add and remove
+          candidates you will have to add similarities.  
+        </Styledbottomp>
       </Container>
     </Jumbo>
   </Styles>

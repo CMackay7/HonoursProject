@@ -72,8 +72,17 @@ class documenttodownload extends React.Component{
     }
 
     // save the file
+    console.log("1");
     var FileSaver = require('file-saver');
-    var blob = new Blob([documenttodownload], {type: "text/plain;charset=utf-8"});
+    //console.log(this.state.data);
+    //var json_obj = JSON.parse(this.props.data);
+    console.log("3");
+    var json_string = JSON.stringify(this.props.data, null, 2);
+    console.log("4");
+    json_string = json_string + "\n" + documenttodownload
+    console.log("5");
+    var blob = new Blob([json_string], {type: "text/plain;charset=utf-8"});
+    
     FileSaver.saveAs(blob, this.state.filename);
   }
 

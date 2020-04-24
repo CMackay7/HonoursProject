@@ -81,3 +81,33 @@ class PluralityVote(Vote):
         candidate_to_win = self.find_candidate(self.candidateToWin)
 
         return total - candidate_to_win.CandidateSimilarity[backupcandidate] * self.voteBreakdown[self.candidateToWin]
+
+
+    def add_candidate(self, candidate_added):
+        total_votes = 0
+        candidate_obj = self.find_candidate(candidate_added)
+        for candidate in self.valid_candidates_copy:
+            curr_candidate_obj = self.find_candidate(candidate)
+            votes_lost = curr_candidate_obj.candidate_added(candidate_added, self.voteBreakdown[candidate])
+            total_votes += votes_lost
+            self.voteBreakdown_copy[candidate] -= votes_lost
+
+        self.voteBreakdown_copy[candidate_added] = total_votes
+        self.backup_candidates_copy.remove(candidate_added)
+
+    def remove_candidate(self, candidate_removed):
+        tosend = set(self.valid_candidates).difference(self.backup_candidates)
+        candidate_removed_obj = self.find_candidate(candidate_removed)
+        vote_change_profile = candidate_removed_obj.candidate_removed(self.voteBreakdown[candidate_removed], tosend)
+
+        if vote_change_profile == 0:
+            del self.voteBreakdown_copy[candidate_removed]
+
+        else:
+            for candidate in self.candidates:
+                if candidate != candidate_removed:
+                    votes_lost = vote_change_profile[candidate]
+                    self.voteBreakdown_copy[candidate] += votes_lost
+
+            del self.voteBreakdown_copy[candidate_removed]
+            self.backup_candidates_copy.add(candidate_removed)
